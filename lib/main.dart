@@ -51,8 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 20), // Add space from the top
-              const SizedBox(height: 10), // Add space between title and letters
+              const SizedBox(height: 30), // Add space from the top
+              const SizedBox(height: 40), // Add space between title and letters
               ScavengerHuntText(), // Use the ScavengerHuntText widget from header.dart
               const SizedBox(height: 20), // Add space between text and counter
               const Text(
@@ -73,6 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
+          DiagonalWidget1(), // Diagonal widgets from header.dart
+          DiagonalWidget2(),
+          DiagonalWidget3(),
+          DiagonalWidget4(),
           Positioned(
               bottom: 150, // Adjust bottom position as needed
               left: 100,

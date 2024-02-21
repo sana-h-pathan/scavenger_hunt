@@ -53,7 +53,7 @@ class ScavengerHuntText extends StatelessWidget {
           ),
           Text(
             'H',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.purple, fontSize: 65),
+            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.orange, fontSize: 65),
           ),
           Text(
             'U',
@@ -86,7 +86,7 @@ class DiagonalWidget1 extends StatelessWidget {
         child: Container(
           width: 50,
           height: 50,
-          color: Colors.green, // Set color to green
+          color:  Color.fromRGBO(233, 30, 90, 1), // Set color to green
           child: Center(
             child: Text(
               '3',
@@ -116,7 +116,7 @@ class DiagonalWidget2 extends StatelessWidget {
         child: Container(
           width: 50,
           height: 50,
-          color: Colors.red, // Set color to red
+          color: Color.fromRGBO(52, 218, 59, 1), // Set color to red
           child: Center(
             child: Text(
               '9',

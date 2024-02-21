@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 20), // Add space from the top
+              const SizedBox(height: 40), // Add space from the top
               const SizedBox(height: 40), // Add space between title and letters
               ScavengerHuntText(), // Reusable Scavenger Hunt text
               const SizedBox(height: 20), // Add space between text and counter

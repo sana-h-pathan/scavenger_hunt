@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'header.dart';
 import 'background.dart';
+import 'page-one.dart';
 
 class NumbersPage extends StatelessWidget {
   @override
@@ -13,7 +14,7 @@ class NumbersPage extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 20), // Add space from the top
+              const SizedBox(height: 40), // Add space from the top
               const SizedBox(height: 40), // Add space between title and letters
               ScavengerHuntText(), // Reusable Scavenger Hunt text
               const SizedBox(height: 20), // Add space between text and counter
@@ -31,61 +32,98 @@ class NumbersPage extends StatelessWidget {
   }
 
   List<Widget> _buildNumberButtons(BuildContext context) {
-    List<Widget> buttons = [];
-    List<Offset> buttonPositions = [];
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double buttonSize = 80.0; 
-    double padding = 20.0;
+  List<Widget> buttons = [];
+  List<Offset> buttonPositions = [];
+  double buttonSize = 110.0; 
+  double padding = 20.0;
 
-    for (int i = 1; i <= 10; i++) {
-      double xPos = math.Random().nextDouble() * (screenWidth - buttonSize);
-      double yPos = screenHeight  - (i * (buttonSize + padding));
-      if(i==10)
-        yPos=yPos+30;
+  // Coordinates for the zigzag pattern resembling 'S'
+  List<Offset> zigzagPoints = [
+    Offset(100, 1100), //1
+    Offset(350, 1050), //2
+    Offset(500, 970), //3
+    Offset(650, 880), //4
+    Offset(300, 750), //5
+    Offset(600, 600), //6
+    Offset(300, 550), //7
+    Offset(150, 450), //8
+    Offset(500, 350), //9
+    Offset(750, 300), //10
+  ];
 
-      buttonPositions.add(Offset(xPos + buttonSize / 2, yPos + buttonSize / 2));
+  for (int i = 0; i < zigzagPoints.length; i++) {
+    double xPos = zigzagPoints[i].dx - buttonSize / 2;
+    double yPos = zigzagPoints[i].dy - buttonSize / 2;
 
-      Widget button = Positioned(
-        left: xPos,
-        top: yPos,
-        child: Container(
-          width: buttonSize,
-          height: buttonSize,
-          decoration: BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              i.toString(),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24, 
-                fontWeight: FontWeight.bold,
-              ),
+    buttonPositions.add(Offset(xPos + buttonSize / 2, yPos + buttonSize / 2));
+
+    Widget button = Positioned(
+    left: xPos,
+    top: yPos,
+    child: GestureDetector(
+      onTap: () {
+        if (i == 0) {
+          // Button 1 pressed
+          // Add your action here for button 1
+          print('Button 1 pressed');
+          // Button 1 pressed
+          // Navigate to PageOne
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageOne()),
+          );
+        } else if (i == 1) {
+          // Button 2 pressed
+          // Add your action here for button 2
+          print('Button 2 pressed');
+        } else if (i == 2) {
+          // Button 3 pressed
+          // Add your action here for button 3
+          print('Button 3 pressed');
+        }
+        // Add conditions for other button clicks similarly
+      },
+      child: Container(
+        width: buttonSize,
+        height: buttonSize,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Text(
+            (i + 1).toString(),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
-      );
-      buttons.add(button);
-    }
-
-    for (int i = 0; i < buttonPositions.length - 1; i++) {
-      Widget line = CustomPaint(
-        painter: LinePainter(
-          buttonPositions[i].dx,
-          buttonPositions[i].dy,
-          buttonPositions[i + 1].dx,
-          buttonPositions[i + 1].dy,
-          buttonSize
-        ),
-      );
-      buttons.add(line);
-    }
-    return buttons;
+      ),
+    ),
+  );
+  buttons.add(button);
   }
+
+  for (int i = 0; i < buttonPositions.length - 1; i++) {
+    Widget line = CustomPaint(
+      painter: LinePainter(
+        buttonPositions[i].dx,
+        buttonPositions[i].dy,
+        buttonPositions[i + 1].dx,
+        buttonPositions[i + 1].dy,
+        buttonSize
+      ),
+    );
+    buttons.add(line);
+  }
+  return buttons;
 }
+
+}
+
+
 
 class LinePainter extends CustomPainter {
   final double startX;
