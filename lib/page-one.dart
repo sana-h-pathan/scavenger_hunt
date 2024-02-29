@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'header.dart';
 import 'background.dart';
+import 'home.dart';
 
 class PageOne extends StatefulWidget {
   @override
@@ -9,6 +12,14 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   int count = 0;
+  List<bool> buttonClicked = [false, false, false];
+
+  void resetCountAndButtons() {
+    setState(() {
+      count = 0;
+      buttonClicked = [false, false, false];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +31,7 @@ class _PageOneState extends State<PageOne> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20), // Add space from the top
-              const SizedBox(height: 60), // Add space between title and letters
+              const SizedBox(height: 80), // Add space between title and letters
               ScavengerHuntText(), // Reusable Scavenger Hunt text
               const SizedBox(height: 40), // Add space between text and images
               // Add Image widget to display one.jpg
@@ -40,9 +51,9 @@ class _PageOneState extends State<PageOne> {
               ),
               const SizedBox(height: 10), // Add space between image and text
               Text(
-                '$count/3',
+                '$count/4',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.yellow,
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
                 ),
@@ -52,15 +63,47 @@ class _PageOneState extends State<PageOne> {
           // Positioned widget for the microphone icon
           Positioned(
             top: 1040, // Adjust the top position of the microphone icon
-            left: 460, // Adjust the left position of the microphone icon
+            left: 480, // Adjust the left position of the microphone icon
             child: IconButton(
               icon: Icon(
                 Icons.mic, // Use the microphone icon
                 size: 60, // Set the size of the icon
               ),
+              color:Colors.yellow,
               onPressed: () {
                 // Handle microphone icon press here
                 // Add your logic for recording or any other action
+              },
+            ),
+          ),
+          // Positioned widget for the hint button
+          Positioned(
+            top: 1040, // Adjust the top position of the hint button
+            left: 550, // Adjust the left position of the hint button
+            child: IconButton(
+              icon: Icon(
+                Icons.lightbulb_outline, // Use the hint icon
+                size: 60, // Set the size of the icon
+              ),
+              color: Colors.yellow, // Set the color of the icon to yellow
+              onPressed: () {
+                // Handle hint button press here
+              },
+            ),
+          ),
+          // Positioned widget for the refresh button
+          Positioned(
+            top: 1040, // Adjust the top position of the refresh button
+            left: 250, // Adjust the left position of the refresh button
+            child: IconButton(
+              icon: Icon(
+                Icons.refresh, // Use the refresh icon
+                size: 60, // Set the size of the icon
+              ),
+              color:Colors.yellow,
+              onPressed: () {
+                // Handle refresh button press here
+                resetCountAndButtons();
               },
             ),
           ),
@@ -80,10 +123,38 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.transparent,
                   onPressed: () {
                     // Handle button press here
-                    setState(() {
-                      count++;
-                      if (count > 3) count = 3; // Limit count to 3
-                    });
+                    if (!buttonClicked[0]) {
+                      setState(() {
+                        count++;
+                        buttonClicked[0] = true;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 880, // Adjust the top position of the button
+            left: 430, // Adjust the left position of the button
+            child: Material(
+              color: Colors.transparent,
+              child: Ink(
+                decoration: ShapeDecoration(
+                  color: Colors.transparent,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.circle),
+                  color: Colors.transparent,
+                  onPressed: () {
+                    // Handle button press here
+                    if (!buttonClicked[1]) {
+                      setState(() {
+                        count++;
+                        buttonClicked[1] = true;
+                      });
+                    }
                   },
                 ),
               ),
@@ -104,10 +175,12 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.transparent,
                   onPressed: () {
                     // Handle button press here
-                    setState(() {
-                      count++;
-                      if (count > 3) count = 3; // Limit count to 3
-                    });
+                    if (!buttonClicked[2]) {
+                      setState(() {
+                        count++;
+                        buttonClicked[2] = true;
+                      });
+                    }
                   },
                 ),
               ),
@@ -128,10 +201,12 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.transparent,
                   onPressed: () {
                     // Handle button press here
-                    setState(() {
-                      count++;
-                      if (count > 3) count = 3; // Limit count to 3
-                    });
+                    if (!buttonClicked[3]) {
+                      setState(() {
+                        count++;
+                        buttonClicked[3] = true;
+                      });
+                    }
                   },
                 ),
               ),
@@ -141,6 +216,22 @@ class _PageOneState extends State<PageOne> {
           DiagonalWidget2(), // Add diagonal widgets from header.dart
           DiagonalWidget3(), // Add diagonal widgets from header.dart
           DiagonalWidget4(), // Add diagonal widgets from header.dart
+          HomeWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
+          MenuWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
         ],
       ),
     );

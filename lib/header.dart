@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'home.dart';
+
+import 'package:flutter/material.dart';
 
 class ScavengerHuntText extends StatelessWidget {
   const ScavengerHuntText({Key? key}) : super(key: key);
@@ -11,67 +14,56 @@ class ScavengerHuntText extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'S',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: const Color.fromRGBO(52, 218, 59, 1), fontSize: 65),
-          ),
-          Text(
-            'C',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Color.fromRGBO(157, 43, 177, 1), fontSize: 65),
-          ),
-          Text(
-            'A',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Color.fromRGBO(241, 56, 67, 1), fontSize: 65),
-          ),
-          Text(
-            'V',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.orange, fontSize: 65),
-          ),
-          Text(
-            'E',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.red, fontSize: 65),
-          ),
-          Text(
-            'N',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Color.fromRGBO(238,251,82,100), fontSize: 65),
-          ),
-          Text(
-            'G',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.purple, fontSize: 65),
-          ),
-          Text(
-            'E',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.pink, fontSize: 65),
-          ),
-          Text(
-            'R',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.green, fontSize: 65),
-          ),
-          const Text(
-            '  ',
-            style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.black, fontSize: 65),
-          ),
-          Text(
-            'H',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.orange, fontSize: 65),
-          ),
-          Text(
-            'U',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Color.fromRGBO(157, 43, 177, 1), fontSize: 65),
-          ),
-          Text(
-            'N',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.red, fontSize: 65),
-          ),
-          Text(
-            'T',
-            style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontFamily: 'Calibri', color: Colors.green, fontSize: 65),
-          ),
+          _buildTextRow(),
+          const SizedBox(width: 20), // Add spacing between home icon and text
         ],
       ),
     );
   }
+
+  Widget _buildTextRow() {
+    return Row(
+      children: [
+        _buildText('S', const Color.fromRGBO(52, 218, 59, 1)),
+        _buildText('C', Color.fromRGBO(157, 43, 177, 1)),
+        _buildText('A', Color.fromRGBO(241, 56, 67, 1)),
+        _buildText('V', Colors.orange),
+        _buildText('E', Colors.red),
+        _buildText('N', const Color.fromRGBO(238, 251, 82, 1)),
+        _buildText('G', Colors.purple),
+        _buildText('E', Colors.pink),
+        _buildText('R', Colors.green),
+        const Text(
+          '  ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Calibri',
+            color: Colors.black,
+            fontSize: 65,
+          ),
+        ),
+        _buildText('H', Colors.orange),
+        _buildText('U', Color.fromRGBO(157, 43, 177, 1)),
+        _buildText('N', Colors.red),
+        _buildText('T', Colors.green),
+      ],
+    );
+  }
+
+  Widget _buildText(String text, Color color) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Calibri',
+        color: color,
+        fontSize: 65,
+      ),
+    );
+  }
 }
+
 
 class DiagonalWidget1 extends StatelessWidget {
   const DiagonalWidget1({Key? key}) : super(key: key);
@@ -139,7 +131,7 @@ class DiagonalWidget3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 40, // Adjust top position as needed
+      top: 70, // Adjust top position as needed
       left: 30,
       child: Transform.rotate(
         angle: -math.pi / 4, // Rotate the square diagonally
@@ -169,7 +161,7 @@ class DiagonalWidget4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 40, // Adjust top position as needed
+      top: 70, // Adjust top position as needed
       right: 30,
       child: Transform.rotate(
         angle: math.pi / 4, // Rotate the square diagonally
@@ -188,6 +180,54 @@ class DiagonalWidget4 extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomeWidget extends StatelessWidget {
+  const HomeWidget({Key? key, required this.onPressed}) : super(key: key);
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 10,
+      left: 20,
+      child: IconButton(
+        icon: Icon(
+          Icons.home,
+          color: Colors.black,
+        ),
+        iconSize: 36,
+        onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+      ),
+    );
+  }
+}
+class MenuWidget extends StatelessWidget {
+  const MenuWidget({Key? key, required this.onPressed}) : super(key: key);
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 10,
+      right: 20,
+      child: IconButton(
+        icon: Icon(
+          Icons.menu,
+          color: Colors.black,
+        ),
+        iconSize: 36,
+        onPressed: onPressed,
       ),
     );
   }

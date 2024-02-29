@@ -3,6 +3,10 @@ import 'dart:math' as math;
 import 'header.dart';
 import 'background.dart';
 import 'page-one.dart';
+import 'page-two.dart';
+import 'page-three.dart';
+import 'page-four.dart';
+import 'home.dart';
 
 class NumbersPage extends StatelessWidget {
   @override
@@ -24,6 +28,22 @@ class NumbersPage extends StatelessWidget {
           DiagonalWidget2(), // Add diagonal widgets from header.dart
           DiagonalWidget3(), // Add diagonal widgets from header.dart
           DiagonalWidget4(), // Add diagonal widgets from header.dart
+          HomeWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
+          MenuWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
           // Number buttons and connecting lines
           ..._buildNumberButtons(context),
         ],
@@ -76,11 +96,28 @@ class NumbersPage extends StatelessWidget {
           // Button 2 pressed
           // Add your action here for button 2
           print('Button 2 pressed');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageTwo()),
+          );
         } else if (i == 2) {
-          // Button 3 pressed
-          // Add your action here for button 3
+          // Button 2 pressed
+          // Add your action here for button 2
           print('Button 3 pressed');
-        }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageThree()),
+          );
+        } 
+        else if (i == 3) {
+          // Button 2 pressed
+          // Add your action here for button 2
+          print('Button 4 pressed');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageFour()),
+          );
+        } 
         // Add conditions for other button clicks similarly
       },
       child: Container(

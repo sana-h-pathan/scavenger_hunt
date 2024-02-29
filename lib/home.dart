@@ -1,8 +1,10 @@
-import 'dart:math' as math;
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'header.dart';
 import 'numbers.dart'; // Import the NumbersPage
 import 'background.dart';
+import 'page-one.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -14,6 +16,7 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           BackgroundGradient(), // Background from background.dart
+          // ignore: prefer_const_constructors
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -27,6 +30,22 @@ class HomeScreen extends StatelessWidget {
           DiagonalWidget2(),
           DiagonalWidget3(),
           DiagonalWidget4(),
+          HomeWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
+          MenuWidget(
+            onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
+          ),
           Positioned(
             top: 300, // Adjust top position as needed
             left: 0,

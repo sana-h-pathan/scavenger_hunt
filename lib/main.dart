@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                   width: 50,
                   height: 50,
-                  color: Colors.blue, // Set color to blue
+                  color: Colors.brown, // Set color to blue
                   child: Center(
                     child: Text(
                       '1',
@@ -182,8 +182,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF9D2BB1),
-                      onPrimary: Colors.white,
+                      primary: Color.fromRGBO(252, 170, 214, 1),
+                      onPrimary: Colors.black,
                       minimumSize: const Size(200, 50), // Set minimum width and height for button
                     ),
                     icon: Icon(Icons.home, size: 30), // Add icon to the button
