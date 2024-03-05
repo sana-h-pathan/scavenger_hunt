@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
@@ -13,6 +14,7 @@ class PageOne extends StatefulWidget {
 class _PageOneState extends State<PageOne> {
   int count = 0;
   List<bool> buttonClicked = [false, false, false];
+  FlutterTts flutterTts = FlutterTts();
 
   void resetCountAndButtons() {
     setState(() {
@@ -69,10 +71,22 @@ class _PageOneState extends State<PageOne> {
                 Icons.mic, // Use the microphone icon
                 size: 60, // Set the size of the icon
               ),
-              color:Colors.yellow,
-              onPressed: () {
+              color: Colors.yellow,
+              onPressed: () async {
                 // Handle microphone icon press here
                 // Add your logic for recording or any other action
+                await flutterTts.setLanguage("en-US");
+                await flutterTts.setPitch(1.0); // Adjust the pitch of the voice
+                await flutterTts
+                    .speak("Please find all occurrences of number 1");
+                // Wait for the English speech to finish plus an additional pause
+                await Future.delayed(
+                    Duration(seconds: 1)); // Adjust the delay as needed
+
+                // Speak in Spanish
+                await flutterTts.setLanguage("es-ES");
+                await flutterTts.speak(
+                    "Por favor, encuentra todas las ocurrencias del número uno");
               },
             ),
           ),
@@ -100,7 +114,7 @@ class _PageOneState extends State<PageOne> {
                 Icons.refresh, // Use the refresh icon
                 size: 60, // Set the size of the icon
               ),
-              color:Colors.yellow,
+              color: Colors.yellow,
               onPressed: () {
                 // Handle refresh button press here
                 resetCountAndButtons();
@@ -218,18 +232,18 @@ class _PageOneState extends State<PageOne> {
           DiagonalWidget4(), // Add diagonal widgets from header.dart
           HomeWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
           MenuWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
         ],
