@@ -3,8 +3,7 @@ import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:scavanger_hunt/numbers.dart' as Numbers; // Rename the import using 'as'
-
+import 'package:scavanger_hunt/numbers.dart' as Numbers;
 
 class PageTwo extends StatefulWidget {
   @override
@@ -34,7 +33,7 @@ class _PageTwoState extends State<PageTwo> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.07), // 10% top padding
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                   Expanded(
                     child: Image.asset(
                       'assets/two.jpg',
@@ -42,14 +41,14 @@ class _PageTwoState extends State<PageTwo> {
                       width: double.infinity,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.11), // 10% bottom padding
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
-              ),       
+              ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.25,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.refresh,
                     size: 60,
                   ),
@@ -58,58 +57,50 @@ class _PageTwoState extends State<PageTwo> {
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.055, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
                   'assets/two.png',
                   width: 60,
-                  height: MediaQuery.of(context).size.height * 0.05, // 5% of screen height
+                  height: MediaQuery.of(context).size.height * 0.05,
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.01, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.01,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Text(
                   '$count/4',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.yellow,
                     fontWeight: FontWeight.bold,
-                    fontSize: 30, // 4% of screen height
+                    fontSize: 30,
                   ),
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.02,
                 right: MediaQuery.of(context).size.width * 0.40,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.mic,
                     size: 60,
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
-                    // Handle microphone icon press here
-                    // Add your logic for recording or any other action
                     await flutterTts.setLanguage("en-US");
-                    await flutterTts.setPitch(1.0); // Adjust the pitch of the voice
-                    await flutterTts
-                        .speak("Please find all occurrences of number two");
-                    // Wait for the English speech to finish plus an additional pause
-                    await Future.delayed(
-                        Duration(seconds: 5)); // Adjust the delay as needed
-
-                    // Speak in Spanish
+                    await flutterTts.setPitch(1.0);
+                    await flutterTts.speak("Please find all occurrences of number two");
+                    await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak(
-                        "Por favor, encuentra todas las ocurrencias del número uno");
+                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número uno");
                   },
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.02,
                 right: MediaQuery.of(context).size.width * 0.25,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.lightbulb_outline,
                     size: 60,
                   ),
@@ -117,34 +108,33 @@ class _PageTwoState extends State<PageTwo> {
                   onPressed: () {},
                 ),
               ),
-              // Buttons positioned based on the device's orientation
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.35, // 5% from bottom
+                top: MediaQuery.of(context).size.height * 0.35,
                 left: MediaQuery.of(context).size.width * 0.34,
                 child: buildButton(0),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.43, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.43,
                 right: MediaQuery.of(context).size.width * 0.165,
                 child: buildButton(1),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.35, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.35,
                 left: MediaQuery.of(context).size.width * 0.32,
                 child: buildButton(2),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.12, // 5% from bottom
+                bottom: MediaQuery.of(context).size.height * 0.12,
                 right: MediaQuery.of(context).size.width * 0.15,
                 child: buildButton(3),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
-                child: Text(
+                child: const Text(
                   'Level 2',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
@@ -162,7 +152,7 @@ class _PageTwoState extends State<PageTwo> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
                 },
               ),
@@ -177,12 +167,12 @@ class _PageTwoState extends State<PageTwo> {
     return Material(
       color: Colors.transparent,
       child: Ink(
-        decoration: ShapeDecoration(
+        decoration: const ShapeDecoration(
           color: Colors.transparent,
           shape: CircleBorder(),
         ),
         child: IconButton(
-          icon: Icon(Icons.circle),
+          icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
             if (!buttonClicked[index]) {
