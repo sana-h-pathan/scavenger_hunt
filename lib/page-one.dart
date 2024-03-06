@@ -1,10 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:scavanger_hunt/numbers.dart' as Numbers; // Rename the import using 'as'
+
 
 class PageOne extends StatefulWidget {
   @override
@@ -13,240 +13,186 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   int count = 0;
-  List<bool> buttonClicked = [false, false, false];
+  List<bool> buttonClicked = [false, false, false, false];
   FlutterTts flutterTts = FlutterTts();
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = [false, false, false];
+      buttonClicked = [false, false, false, false];
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          BackgroundGradient(), // Use background from background.dart
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 20), // Add space from the top
-              const SizedBox(height: 80), // Add space between title and letters
-              ScavengerHuntText(), // Reusable Scavenger Hunt text
-              const SizedBox(height: 40), // Add space between text and images
-              // Add Image widget to display one.jpg
-              Image.asset(
-                'assets/one.jpg', // Path to the image asset
-                fit: BoxFit.fill, // Adjust the fit as needed
-                width: double.infinity, // Make the image take the full width
-                height: 780, // Set the height of the image
-              ),
-              const SizedBox(height: 20), // Add space between images
-              // Add Image widget to display one.png
-              Image.asset(
-                'assets/one.png', // Path to the image asset
-                fit: BoxFit.cover, // Adjust the fit as needed
-                width: 70, // Make the image take the full width
-                height: 80, // Set the height of the image
-              ),
-              const SizedBox(height: 10), // Add space between image and text
-              Text(
-                '$count/4',
-                style: TextStyle(
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return Stack(
+            children: [
+              BackgroundGradient(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07), // 10% top padding
+                  Expanded(
+                    child: Image.asset(
+                      'assets/one.jpg',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.13), // 10% bottom padding
+                ],
+              ),       
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.25,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.refresh,
+                    size: 60,
+                  ),
                   color: Colors.yellow,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  onPressed: resetCountAndButtons,
                 ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.055, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.40,
+                child: Image.asset(
+                  'assets/one.png',
+                  width: 60,
+                  height: MediaQuery.of(context).size.height * 0.05, // 5% of screen height
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.01, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.40,
+                child: Text(
+                  '$count/4',
+                  style: TextStyle(
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30, // 4% of screen height
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.40,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.mic,
+                    size: 60,
+                  ),
+                  color: Colors.yellow,
+                  onPressed: () async {
+                    // Handle microphone icon press here
+                    // Add your logic for recording or any other action
+                    await flutterTts.setLanguage("en-US");
+                    await flutterTts.setPitch(1.0); // Adjust the pitch of the voice
+                    await flutterTts
+                        .speak("Please find all occurrences of number 1");
+                    // Wait for the English speech to finish plus an additional pause
+                    await Future.delayed(
+                        Duration(seconds: 1)); // Adjust the delay as needed
+
+                    // Speak in Spanish
+                    await flutterTts.setLanguage("es-ES");
+                    await flutterTts.speak(
+                        "Por favor, encuentra todas las ocurrencias del número uno");
+                  },
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.25,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.lightbulb_outline,
+                    size: 60,
+                  ),
+                  color: Colors.yellow,
+                  onPressed: () {},
+                ),
+              ),
+              // Buttons positioned based on the device's orientation
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.10, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.07,
+                child: buildButton(0),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.31, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.40,
+                child: buildButton(1),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.35, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.13,
+                child: buildButton(2),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.17, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.40,
+                child: buildButton(3),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.40,
+                child: Text(
+                  'Level 1',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                  ),
+                ),
+              ),
+              HomeWidget(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
+                  );
+                },
+              ),
+              MenuWidget(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                },
               ),
             ],
-          ),
-          // Positioned widget for the microphone icon
-          Positioned(
-            top: 1040, // Adjust the top position of the microphone icon
-            left: 480, // Adjust the left position of the microphone icon
-            child: IconButton(
-              icon: Icon(
-                Icons.mic, // Use the microphone icon
-                size: 60, // Set the size of the icon
-              ),
-              color: Colors.yellow,
-              onPressed: () async {
-                // Handle microphone icon press here
-                // Add your logic for recording or any other action
-                await flutterTts.setLanguage("en-US");
-                await flutterTts.setPitch(1.0); // Adjust the pitch of the voice
-                await flutterTts
-                    .speak("Please find all occurrences of number 1");
-                // Wait for the English speech to finish plus an additional pause
-                await Future.delayed(
-                    Duration(seconds: 1)); // Adjust the delay as needed
+          );
+        },
+      ),
+    );
+  }
 
-                // Speak in Spanish
-                await flutterTts.setLanguage("es-ES");
-                await flutterTts.speak(
-                    "Por favor, encuentra todas las ocurrencias del número uno");
-              },
-            ),
-          ),
-          // Positioned widget for the hint button
-          Positioned(
-            top: 1040, // Adjust the top position of the hint button
-            left: 550, // Adjust the left position of the hint button
-            child: IconButton(
-              icon: Icon(
-                Icons.lightbulb_outline, // Use the hint icon
-                size: 60, // Set the size of the icon
-              ),
-              color: Colors.yellow, // Set the color of the icon to yellow
-              onPressed: () {
-                // Handle hint button press here
-              },
-            ),
-          ),
-          // Positioned widget for the refresh button
-          Positioned(
-            top: 1040, // Adjust the top position of the refresh button
-            left: 250, // Adjust the left position of the refresh button
-            child: IconButton(
-              icon: Icon(
-                Icons.refresh, // Use the refresh icon
-                size: 60, // Set the size of the icon
-              ),
-              color: Colors.yellow,
-              onPressed: () {
-                // Handle refresh button press here
-                resetCountAndButtons();
-              },
-            ),
-          ),
-          // Positioned widgets for buttons
-          Positioned(
-            top: 300, // Adjust the top position of the button
-            left: 50, // Adjust the left position of the button
-            child: Material(
-              color: Colors.transparent,
-              child: Ink(
-                decoration: ShapeDecoration(
-                  color: Colors.transparent,
-                  shape: CircleBorder(),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.circle),
-                  color: Colors.transparent,
-                  onPressed: () {
-                    // Handle button press here
-                    if (!buttonClicked[0]) {
-                      setState(() {
-                        count++;
-                        buttonClicked[0] = true;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 880, // Adjust the top position of the button
-            left: 430, // Adjust the left position of the button
-            child: Material(
-              color: Colors.transparent,
-              child: Ink(
-                decoration: ShapeDecoration(
-                  color: Colors.transparent,
-                  shape: CircleBorder(),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.circle),
-                  color: Colors.transparent,
-                  onPressed: () {
-                    // Handle button press here
-                    if (!buttonClicked[1]) {
-                      setState(() {
-                        count++;
-                        buttonClicked[1] = true;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 480, // Adjust the top position of the button
-            left: 445, // Adjust the left position of the button
-            child: Material(
-              color: Colors.transparent,
-              child: Ink(
-                decoration: ShapeDecoration(
-                  color: Colors.transparent,
-                  shape: CircleBorder(),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.circle),
-                  color: Colors.transparent,
-                  onPressed: () {
-                    // Handle button press here
-                    if (!buttonClicked[2]) {
-                      setState(() {
-                        count++;
-                        buttonClicked[2] = true;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 755, // Adjust the top position of the button
-            left: 675, // Adjust the left position of the button
-            child: Material(
-              color: Colors.transparent,
-              child: Ink(
-                decoration: ShapeDecoration(
-                  color: Colors.transparent,
-                  shape: CircleBorder(),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.circle),
-                  color: Colors.transparent,
-                  onPressed: () {
-                    // Handle button press here
-                    if (!buttonClicked[3]) {
-                      setState(() {
-                        count++;
-                        buttonClicked[3] = true;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-          ),
-          DiagonalWidget1(), // Add diagonal widgets from header.dart
-          DiagonalWidget2(), // Add diagonal widgets from header.dart
-          DiagonalWidget3(), // Add diagonal widgets from header.dart
-          DiagonalWidget4(), // Add diagonal widgets from header.dart
-          HomeWidget(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              ); // Handle home button press here
-            },
-          ),
-          MenuWidget(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              ); // Handle home button press here
-            },
-          ),
-        ],
+  Widget buildButton(int index) {
+    return Material(
+      color: Colors.transparent,
+      child: Ink(
+        decoration: ShapeDecoration(
+          color: Colors.transparent,
+          shape: CircleBorder(),
+        ),
+        child: IconButton(
+          icon: Icon(Icons.circle),
+          color: Colors.transparent,
+          onPressed: () {
+            if (!buttonClicked[index]) {
+              setState(() {
+                count++;
+                buttonClicked[index] = true;
+              });
+            }
+          },
+        ),
       ),
     );
   }

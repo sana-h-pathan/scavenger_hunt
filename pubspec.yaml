@@ -69,8 +69,8 @@ flutter:
     - assets/symbols.png
     - assets/numbers.png
     - assets/one.jpg
-    - assets/two.png
-    - assets/three.png
+    - assets/two.jpg
+    - assets/three.jpg
     - assets/four.jpg
     - assets/one.png
   # An image asset can refer to one or more resolution-specific "variants", see
