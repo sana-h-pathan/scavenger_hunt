@@ -42,7 +42,7 @@ class _PageOneState extends State<PageOne> {
                       width: double.infinity,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.13), // 10% bottom padding
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.11), // 10% bottom padding
                 ],
               ),       
               Positioned(
@@ -96,7 +96,7 @@ class _PageOneState extends State<PageOne> {
                         .speak("Please find all occurrences of number 1");
                     // Wait for the English speech to finish plus an additional pause
                     await Future.delayed(
-                        Duration(seconds: 1)); // Adjust the delay as needed
+                        Duration(seconds: 5)); // Adjust the delay as needed
 
                     // Speak in Spanish
                     await flutterTts.setLanguage("es-ES");
