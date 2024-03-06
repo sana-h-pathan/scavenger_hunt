@@ -34,7 +34,7 @@ class _PageTwoState extends State<PageTwo> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.06), // 10% top padding
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07), // 10% top padding
                   Expanded(
                     child: Image.asset(
                       'assets/two.jpg',
@@ -58,12 +58,12 @@ class _PageTwoState extends State<PageTwo> {
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
-                left: MediaQuery.of(context).size.width * 0.17,
+                bottom: MediaQuery.of(context).size.height * 0.055, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
                   'assets/two.png',
-                  width: 100,
-                  height: MediaQuery.of(context).size.height * 0.055, // 5% of screen height
+                  width: 60,
+                  height: MediaQuery.of(context).size.height * 0.05, // 5% of screen height
                 ),
               ),
               Positioned(
