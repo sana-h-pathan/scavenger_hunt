@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'home.dart';
+import 'package:scavanger_hunt/numbers.dart' as Numbers; // Rename the import using 'as'
+
 
 import 'package:flutter/material.dart';
 
@@ -193,8 +194,8 @@ class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 10,
-      left: 20,
+      top: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+      left: MediaQuery.of(context).size.width * 0.07,
       child: IconButton(
         icon: Icon(
           Icons.home,
@@ -204,7 +205,7 @@ class HomeWidget extends StatelessWidget {
         onPressed: () {
                   Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
               );// Handle home button press here
             },
       ),
@@ -219,8 +220,8 @@ class MenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 10,
-      right: 20,
+      top: MediaQuery.of(context).size.height * 0.02, // 5% from bottom
+      right: MediaQuery.of(context).size.width * 0.07,
       child: IconButton(
         icon: Icon(
           Icons.menu,
@@ -232,3 +233,5 @@ class MenuWidget extends StatelessWidget {
     );
   }
 }
+
+

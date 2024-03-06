@@ -15,14 +15,9 @@ class NumbersPage extends StatelessWidget {
       body: Stack(
         children: [
           BackgroundGradient(), // Use background from background.dart
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 40), // Add space from the top
-              const SizedBox(height: 40), // Add space between title and letters
-              ScavengerHuntText(), // Reusable Scavenger Hunt text
-              const SizedBox(height: 20), // Add space between text and counter
-            ],
+          _buildScavengerHuntSection(),
+          Positioned.fill(
+            child: _buildImageSection(context),
           ),
           DiagonalWidget1(), // Add diagonal widgets from header.dart
           DiagonalWidget2(), // Add diagonal widgets from header.dart
@@ -30,18 +25,18 @@ class NumbersPage extends StatelessWidget {
           DiagonalWidget4(), // Add diagonal widgets from header.dart
           HomeWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
           MenuWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
           // Number buttons and connecting lines
@@ -51,116 +46,133 @@ class NumbersPage extends StatelessWidget {
     );
   }
 
+  Widget _buildScavengerHuntSection() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        const SizedBox(height: 80), // Add space between title and letters
+        ScavengerHuntText(), // Reusable Scavenger Hunt text
+      ],
+    );
+  }
+
+  Widget _buildImageSection(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: MediaQuery.of(context).size.height * 0.19), // 10% top padding
+        Expanded(
+          child: Image.asset(
+            'assets/numberlevel.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+          ),
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.02), // 10% bottom padding
+      ],
+    );
+  }
+
   List<Widget> _buildNumberButtons(BuildContext context) {
-  List<Widget> buttons = [];
-  List<Offset> buttonPositions = [];
-  double buttonSize = 110.0; 
-  double padding = 20.0;
+    List<Widget> buttons = [];
+    List<Offset> buttonPositions = [];
+    double buttonSize = 60.0;
+    double padding = 20.0;
 
-  // Coordinates for the zigzag pattern resembling 'S'
-  List<Offset> zigzagPoints = [
-    Offset(100, 1100), //1
-    Offset(350, 1050), //2
-    Offset(500, 970), //3
-    Offset(650, 880), //4
-    Offset(300, 750), //5
-    Offset(600, 600), //6
-    Offset(300, 550), //7
-    Offset(150, 450), //8
-    Offset(500, 350), //9
-    Offset(750, 300), //10
-  ];
+    // Coordinates for the zigzag pattern resembling 'S'
+    List<Offset> zigzagPoints = [
+      Offset(600, 1120), //1
+      Offset(240, 1080), //2
+      Offset(600, 1000), //3
+      Offset(300, 920), //4
+      Offset(550, 850), //5
+      Offset(320, 780), //6
+      Offset(490, 720), //7
+      Offset(360, 660), //8
+      Offset(450, 600), //9
+      Offset(410, 500), //10
+    ];
 
-  for (int i = 0; i < zigzagPoints.length; i++) {
-    double xPos = zigzagPoints[i].dx - buttonSize / 2;
-    double yPos = zigzagPoints[i].dy - buttonSize / 2;
+    for (int i = 0; i < zigzagPoints.length; i++) {
+      double xPos = zigzagPoints[i].dx - buttonSize / 2;
+      double yPos = zigzagPoints[i].dy - buttonSize / 2;
 
-    buttonPositions.add(Offset(xPos + buttonSize / 2, yPos + buttonSize / 2));
+      buttonPositions.add(Offset(xPos + buttonSize / 2, yPos + buttonSize / 2));
 
-    Widget button = Positioned(
-    left: xPos,
-    top: yPos,
-    child: GestureDetector(
+      Widget button = Positioned(
+        left: xPos,
+        top: yPos,
+        child: _buildNumberButton(context, i),
+      );
+      buttons.add(button);
+    }
+
+    for (int i = 0; i < buttonPositions.length - 1; i++) {
+      Widget line = CustomPaint(
+        painter: LinePainter(
+            buttonPositions[i].dx,
+            buttonPositions[i].dy,
+            buttonPositions[i + 1].dx,
+            buttonPositions[i + 1].dy,
+            buttonSize),
+      );
+      buttons.add(line);
+    }
+    return buttons;
+  }
+
+  Widget _buildNumberButton(BuildContext context, int index) {
+    return GestureDetector(
       onTap: () {
-        if (i == 0) {
-          // Button 1 pressed
-          // Add your action here for button 1
-          print('Button 1 pressed');
-          // Button 1 pressed
-          // Navigate to PageOne
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PageOne()),
-          );
-        } else if (i == 1) {
-          // Button 2 pressed
-          // Add your action here for button 2
-          print('Button 2 pressed');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PageTwo()),
-          );
-        } else if (i == 2) {
-          // Button 2 pressed
-          // Add your action here for button 2
-          print('Button 3 pressed');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PageThree()),
-          );
-        } 
-        else if (i == 3) {
-          // Button 2 pressed
-          // Add your action here for button 2
-          print('Button 4 pressed');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PageFour()),
-          );
-        } 
-        // Add conditions for other button clicks similarly
+        switch (index) {
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageOne()),
+            );
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageTwo()),
+            );
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageThree()),
+            );
+            break;
+          case 3:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageFour()),
+            );
+            break;
+          // Add cases for other button clicks similarly
+        }
       },
       child: Container(
-        width: buttonSize,
-        height: buttonSize,
+        width: 60.0,
+        height: 60.0,
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: Color.fromARGB(255, 176, 39, 151),
           shape: BoxShape.circle,
         ),
         child: Center(
           child: Text(
-            (i + 1).toString(),
+            (index + 1).toString(),
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
       ),
-    ),
-  );
-  buttons.add(button);
-  }
-
-  for (int i = 0; i < buttonPositions.length - 1; i++) {
-    Widget line = CustomPaint(
-      painter: LinePainter(
-        buttonPositions[i].dx,
-        buttonPositions[i].dy,
-        buttonPositions[i + 1].dx,
-        buttonPositions[i + 1].dy,
-        buttonSize
-      ),
     );
-    buttons.add(line);
   }
-  return buttons;
 }
-
-}
-
-
 
 class LinePainter extends CustomPainter {
   final double startX;
@@ -174,8 +186,8 @@ class LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 2
+      ..color = Colors.white
+      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
     // Calculate the direction vector from start to end
@@ -197,7 +209,8 @@ class LinePainter extends CustomPainter {
     double adjustedEndX = endX - normalizedDx * (buttonSize / 2);
     double adjustedEndY = endY - normalizedDy * (buttonSize / 2);
 
-    canvas.drawLine(Offset(adjustedStartX, adjustedStartY), Offset(adjustedEndX, adjustedEndY), paint);
+    canvas.drawLine(
+        Offset(adjustedStartX, adjustedStartY), Offset(adjustedEndX, adjustedEndY), paint);
   }
 
   @override
@@ -205,5 +218,3 @@ class LinePainter extends CustomPainter {
     return false;
   }
 }
-
-

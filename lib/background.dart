@@ -4,14 +4,14 @@ class BackgroundGradient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.4, 1.0],
+          begin: Alignment.topLeft, // Change the begin alignment
+          end: Alignment.bottomRight, // Change the end alignment
+          stops: [0.3, 1.0],
           colors: [
             Color.fromRGBO(252, 170, 214, 1), // Light pink color
-            Color.fromRGBO(114, 229, 91, 1), // Light blue color
+            Colors.lightBlue, // Light blue color
           ],
         ),
       ),
