@@ -74,6 +74,8 @@ flutter:
     - assets/four.jpg
     - assets/one.png
     - assets/two.png
+    - assets/three.png
+    - assets/four.png
     - assets/numberlevel.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

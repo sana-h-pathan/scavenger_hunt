@@ -12,13 +12,20 @@ class PageThree extends StatefulWidget {
 
 class _PageThreeState extends State<PageThree> {
   int count = 0;
-  List<bool> buttonClicked = [false, false, false, false];
   FlutterTts flutterTts = FlutterTts();
+  Future<void> speakMessage(String message) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+
+  Map<int, String> buttonToHint = {0: "two", 1: "three", 2: "four", 3: "five"};
+  Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = [false, false, false, false];
+      buttonClicked = {0: false, 1: false, 2: false, 3: false};
     });
   }
 
@@ -105,7 +112,15 @@ class _PageThreeState extends State<PageThree> {
                     size: 60,
                   ),
                   color: Colors.yellow,
-                  onPressed: () {},
+                  onPressed: () async {
+                    // Speak the hint if the button hasn't been clicked
+                    for (int i = 0; i < buttonToHint.length; i++) {
+                      if (!buttonClicked[i]!) {
+                        await flutterTts.speak(buttonToHint[i]!);
+                        break;
+                      }
+                    }
+                  },
                 ),
               ),
               Positioned(
@@ -175,10 +190,13 @@ class _PageThreeState extends State<PageThree> {
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
-            if (!buttonClicked[index]) {
+            if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                if (count == 4) {
+                  flutterTts.speak("You have found all occurrences of number 3");
+                }
               });
             }
           },

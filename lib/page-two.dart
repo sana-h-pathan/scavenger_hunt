@@ -12,13 +12,19 @@ class PageTwo extends StatefulWidget {
 
 class _PageTwoState extends State<PageTwo> {
   int count = 0;
-  List<bool> buttonClicked = [false, false, false, false];
   FlutterTts flutterTts = FlutterTts();
+  Future<void> speakMessage(String message) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+  Map<int, String> buttonToHint = {0: "one", 1: "three", 2: "four", 3: "five"};
+  Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = [false, false, false, false];
+      buttonClicked = {0: false, 1: false, 2: false, 3: false};
     });
   }
 
@@ -89,10 +95,10 @@ class _PageTwoState extends State<PageTwo> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
-                    await flutterTts.speak("Please find all occurrences of number two");
+                    await flutterTts.speak("Please find all occurrences of number ${buttonToHint[0]}");
                     await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número uno");
+                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número ${buttonToHint[0]}");
                   },
                 ),
               ),
@@ -105,9 +111,21 @@ class _PageTwoState extends State<PageTwo> {
                     size: 60,
                   ),
                   color: Colors.yellow,
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (allButtonsClicked()) {
+                      speakMessage("You have found all occurrences of number 4");
+                    }
+                    // Speak the hint if the button hasn't been clicked
+                    for (int i = 0; i < buttonToHint.length; i++) {
+                      if (!buttonClicked[i]!) {
+                        await speakMessage(buttonToHint[i]!);
+                        break;
+                      }
+                    }
+                  },
                 ),
               ),
+              // Buttons positioned based on the device's orientation
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.35,
                 left: MediaQuery.of(context).size.width * 0.34,
@@ -163,6 +181,15 @@ class _PageTwoState extends State<PageTwo> {
     );
   }
 
+  bool allButtonsClicked() {
+    for (var entry  in buttonClicked.entries) {
+      if (!entry.value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   Widget buildButton(int index) {
     return Material(
       color: Colors.transparent,
@@ -175,10 +202,13 @@ class _PageTwoState extends State<PageTwo> {
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
-            if (!buttonClicked[index]) {
+            if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                if (count == 4) {
+                  flutterTts.speak("You have found all occurrences of number 2");
+                }
               });
             }
           },
