@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/shapes.png',
+                          'assets/flipcard.png',
                           height: 300, // Set the height to adjust the size
                           width: 300, // Set the width to adjust the size
                         ),
@@ -135,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Image.asset(
-                            'assets/symbols.png',
+                            'assets/sequence.png',
                             height: 300, // Set the height to adjust the size
                             width: 300, // Set the width to adjust the size
                           ),
