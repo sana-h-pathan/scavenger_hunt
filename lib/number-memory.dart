@@ -6,7 +6,6 @@ import 'header.dart';
 import 'home.dart';
 import 'dart:async';
 
-
 class NumberMemoryGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -145,7 +144,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               height: boxHeight,
               child: Center(
                 child: Text(
-                  cardVisible[index] ? '${numbers[index]}' : '',
+                  cardVisible[index] ? '${_getDisplayContent(index)}' : '',
                   style: const TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
@@ -158,6 +157,43 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
         );
       },
     );
+  }
+
+  String _getDisplayContent(int index) {
+    // Return digit for even indices and spelling for odd indices
+    int number = numbers[index];
+    if (index.isEven) {
+      return '$number';
+    } else {
+      return _getSpelledNumber(number);
+    }
+  }
+
+  String _getSpelledNumber(int number) {
+    switch (number) {
+      case 1:
+        return 'One';
+      case 2:
+        return 'Two';
+      case 3:
+        return 'Three';
+      case 4:
+        return 'Four';
+      case 5:
+        return 'Five';
+      case 6:
+        return 'Six';
+      case 7:
+        return 'Seven';
+      case 8:
+        return 'Eight';
+      case 9:
+        return 'Nine';
+      case 10:
+        return 'Ten';
+      default:
+        return '';
+    }
   }
 
   void checkMatch() {
@@ -179,5 +215,3 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     }
   }
 }
-
-
