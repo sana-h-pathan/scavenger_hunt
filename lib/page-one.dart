@@ -16,10 +16,9 @@ class _PageOneState extends State<PageOne> {
   Future<void> speakMessage(String message) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.0);
-    await flutterTts.setLanguage("es-ES");
     await flutterTts.speak(message);
   }
-  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "four"};
+  Map<int, String> buttonToHint = {0: "one", 1: "three", 2: "four", 3: "five"};
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -50,7 +49,7 @@ class _PageOneState extends State<PageOne> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
-              ),       
+              ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.25,
@@ -94,12 +93,10 @@ class _PageOneState extends State<PageOne> {
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
-                    // Handle microphone icon press here
-                    // Add your logic for recording or any other action
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
-                    await flutterTts.speak("Please find all occurrences of number 1");
-                    await Future.delayed(Duration(seconds: 5));
+                    await flutterTts.speak("Please find all occurrences of number one");
+                    await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
                     await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número uno");
                   },
@@ -116,12 +113,12 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage("You have found all occurrences of number 4");
+                      speakMessage("You have found all occurrences of number 1");
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await flutterTts.speak(buttonToHint[i]!);
+                        await speakMessage(buttonToHint[i]!);
                         break;
                       }
                     }
@@ -155,7 +152,7 @@ class _PageOneState extends State<PageOne> {
                 child: const Text(
                   'Level 1',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
@@ -173,7 +170,7 @@ class _PageOneState extends State<PageOne> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
                 },
               ),
@@ -183,6 +180,7 @@ class _PageOneState extends State<PageOne> {
       ),
     );
   }
+
   bool allButtonsClicked() {
     for (var entry  in buttonClicked.entries) {
       if (!entry.value) {
@@ -204,12 +202,12 @@ class _PageOneState extends State<PageOne> {
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
-          if (!buttonClicked[index]!) {
+            if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
                 if (count == 4) {
-                  speakMessage("You have found all occurrences of number 1");
+                  flutterTts.speak("You have found all occurrences of number 1");
                 }
               });
             }

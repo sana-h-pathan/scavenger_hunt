@@ -152,7 +152,7 @@ class _PageTwoState extends State<PageTwo> {
                 child: const Text(
                   'Level 2',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
