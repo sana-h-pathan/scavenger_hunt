@@ -67,7 +67,7 @@ class _PageThreeState extends State<PageThree> {
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
-                  'assets/one.png',
+                  'assets/three.png',
                   width: 60,
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
@@ -113,10 +113,13 @@ class _PageThreeState extends State<PageThree> {
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
+                    if (allButtonsClicked()) {
+                      speakMessage("You have found all occurrences of number 4");
+                    }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await flutterTts.speak(buttonToHint[i]!);
+                        await speakMessage(buttonToHint[i]!);
                         break;
                       }
                     }
@@ -178,6 +181,15 @@ class _PageThreeState extends State<PageThree> {
     );
   }
 
+  bool allButtonsClicked() {
+    for (var entry  in buttonClicked.entries) {
+      if (!entry.value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   Widget buildButton(int index) {
     return Material(
       color: Colors.transparent,
@@ -195,7 +207,7 @@ class _PageThreeState extends State<PageThree> {
                 count++;
                 buttonClicked[index] = true;
                 if (count == 4) {
-                  flutterTts.speak("You have found all occurrences of number 3");
+                  speakMessage("You have found all occurrences of number 3");
                 }
               });
             }
