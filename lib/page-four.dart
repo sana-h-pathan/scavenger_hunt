@@ -12,13 +12,21 @@ class PageFour extends StatefulWidget {
 
 class _PageFourState extends State<PageFour> {
   int count = 0;
-  List<bool> buttonClicked = [false, false, false, false];
   FlutterTts flutterTts = FlutterTts();
+  Future<void> speakMessage(String message) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+
+
+  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "four"};
+  Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = [false, false, false, false];
+      buttonClicked = {0: false, 1: false, 2: false, 3: false};
     });
   }
 
@@ -60,7 +68,7 @@ class _PageFourState extends State<PageFour> {
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
-                  'assets/two.png',
+                  'assets/four.png',
                   width: 60,
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
@@ -105,27 +113,38 @@ class _PageFourState extends State<PageFour> {
                     size: 60,
                   ),
                   color: Colors.yellow,
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (allButtonsClicked()) {
+                      speakMessage("You have found all occurrences of number 4");
+                    }
+                    // Speak the hint if the button hasn't been clicked
+                    for (int i = 0; i < buttonToHint.length; i++) {
+                      if (!buttonClicked[i]!) {
+                        await speakMessage(buttonToHint[i]!);
+                        break;
+                      }
+                    }
+                  },
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.34, // 5% from bottom
-                right: MediaQuery.of(context).size.width * 0.11,
+                top: MediaQuery.of(context).size.height * 0.31, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.37,
                 child: buildButton(0),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.35, // 5% from bottom
-                left: MediaQuery.of(context).size.width * 0.40,
+                top: MediaQuery.of(context).size.height * 0.48, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.04,
                 child: buildButton(1),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.31, // 5% from bottom
-                right: MediaQuery.of(context).size.width * 0.22,
+                bottom: MediaQuery.of(context).size.height * 0.37, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.43,
                 child: buildButton(2),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.22, // 5% from bottom
-                left: MediaQuery.of(context).size.width * 0.22,
+                bottom: MediaQuery.of(context).size.height * 0.16, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.12,
                 child: buildButton(3),
               ),
               Positioned(
@@ -163,6 +182,15 @@ class _PageFourState extends State<PageFour> {
     );
   }
 
+  bool allButtonsClicked() {
+    for (var entry  in buttonClicked.entries) {
+      if (!entry.value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   Widget buildButton(int index) {
     return Material(
       color: Colors.transparent,
@@ -175,10 +203,13 @@ class _PageFourState extends State<PageFour> {
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
-            if (!buttonClicked[index]) {
+            if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                if (count == 4) {
+                  speakMessage("Congratulations!!!You have found all occurrences of number 4");
+                }
               });
             }
           },

@@ -13,13 +13,20 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   int count = 0;
-  List<bool> buttonClicked = [false, false, false, false];
   FlutterTts flutterTts = FlutterTts();
+  Future<void> speakMessage(String message) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.speak(message);
+  }
+  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "four"};
+  Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = [false, false, false, false];
+      buttonClicked = {0: false, 1: false, 2: false, 3: false};
     });
   }
 
@@ -44,7 +51,7 @@ class _PageOneState extends State<PageOne> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
-              ),
+              ),       
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.25,
@@ -88,6 +95,8 @@ class _PageOneState extends State<PageOne> {
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
+                    // Handle microphone icon press here
+                    // Add your logic for recording or any other action
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
                     await flutterTts
@@ -108,9 +117,21 @@ class _PageOneState extends State<PageOne> {
                     size: 60,
                   ),
                   color: Colors.yellow,
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (allButtonsClicked()) {
+                      speakMessage("You have found all occurrences of number 4");
+                    }
+                    // Speak the hint if the button hasn't been clicked
+                    for (int i = 0; i < buttonToHint.length; i++) {
+                      if (!buttonClicked[i]!) {
+                        await flutterTts.speak(buttonToHint[i]!);
+                        break;
+                      }
+                    }
+                  },
                 ),
               ),
+              // Buttons positioned based on the device's orientation
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.10,
                 left: MediaQuery.of(context).size.width * 0.07,
@@ -166,6 +187,14 @@ class _PageOneState extends State<PageOne> {
       ),
     );
   }
+  bool allButtonsClicked() {
+    for (var entry  in buttonClicked.entries) {
+      if (!entry.value) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   Widget buildButton(int index) {
     return Material(
@@ -179,10 +208,13 @@ class _PageOneState extends State<PageOne> {
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
           onPressed: () {
-            if (!buttonClicked[index]) {
+          if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                if (count == 4) {
+                  speakMessage("You have found all occurrences of number 1");
+                }
               });
             }
           },
