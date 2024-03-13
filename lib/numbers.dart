@@ -7,6 +7,9 @@ import 'page-one.dart';
 import 'page-two.dart';
 import 'page-three.dart';
 import 'page-four.dart';
+import 'page-five.dart';
+import 'page-six.dart';
+import 'page-seven.dart';
 import 'home.dart';
 
 class NumbersPage extends StatelessWidget {
@@ -61,7 +64,9 @@ class NumbersPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height * 0.19), // 10% top padding
+        SizedBox(
+            height:
+                MediaQuery.of(context).size.height * 0.19), // 10% top padding
         Expanded(
           child: Image.asset(
             'assets/numberlevel.jpg',
@@ -69,7 +74,9 @@ class NumbersPage extends StatelessWidget {
             width: double.infinity,
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02), // 10% bottom padding
+        SizedBox(
+            height: MediaQuery.of(context).size.height *
+                0.02), // 10% bottom padding
       ],
     );
   }
@@ -110,12 +117,8 @@ class NumbersPage extends StatelessWidget {
 
     for (int i = 0; i < buttonPositions.length - 1; i++) {
       Widget line = CustomPaint(
-        painter: LinePainter(
-            buttonPositions[i].dx,
-            buttonPositions[i].dy,
-            buttonPositions[i + 1].dx,
-            buttonPositions[i + 1].dy,
-            buttonSize),
+        painter: LinePainter(buttonPositions[i].dx, buttonPositions[i].dy,
+            buttonPositions[i + 1].dx, buttonPositions[i + 1].dy, buttonSize),
       );
       buttons.add(line);
     }
@@ -148,6 +151,24 @@ class NumbersPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PageFour()),
+            );
+            break;
+          case 4:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageFive()),
+            );
+            break;
+          case 5:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageSix()),
+            );
+            break;
+          case 6:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageSeven()),
             );
             break;
           // Add cases for other button clicks similarly
@@ -210,8 +231,8 @@ class LinePainter extends CustomPainter {
     double adjustedEndX = endX - normalizedDx * (buttonSize / 2);
     double adjustedEndY = endY - normalizedDy * (buttonSize / 2);
 
-    canvas.drawLine(
-        Offset(adjustedStartX, adjustedStartY), Offset(adjustedEndX, adjustedEndY), paint);
+    canvas.drawLine(Offset(adjustedStartX, adjustedStartY),
+        Offset(adjustedEndX, adjustedEndY), paint);
   }
 
   @override

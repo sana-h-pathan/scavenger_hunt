@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:scavanger_hunt/page-two.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
 
-class PageOne extends StatefulWidget {
+class PageSeven extends StatefulWidget {
   @override
-  _PageOneState createState() => _PageOneState();
+  _PageSevenState createState() => _PageSevenState();
 }
 
-class _PageOneState extends State<PageOne> {
+class _PageSevenState extends State<PageSeven> {
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String message) async {
@@ -21,13 +19,37 @@ class _PageOneState extends State<PageOne> {
     await flutterTts.speak(message);
   }
 
-  Map<int, String> buttonToHint = {0: "Reach me through ladded", 1: "I am hanging in water", 2: "I am on arms", 3: "find me in water"};
-  Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
+  Map<int, String> buttonToHint = {
+    0: "one",
+    1: "two",
+    2: "three",
+    3: "four",
+    4: "five",
+    5: "six",
+    6: "seven"
+  };
+  Map<int, bool> buttonClicked = {
+    0: false,
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false
+  };
 
   void resetCountAndButtons() {
     setState(() {
       count = 0;
-      buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      buttonClicked = {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false
+      };
     });
   }
 
@@ -42,15 +64,19 @@ class _PageOneState extends State<PageOne> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.07), // 10% top padding
                   Expanded(
                     child: Image.asset(
-                      'assets/one.jpg',
+                      'assets/seven.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.11),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.11), // 10% bottom padding
                 ],
               ),
               Positioned(
@@ -69,7 +95,7 @@ class _PageOneState extends State<PageOne> {
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
-                  'assets/one.png',
+                  'assets/seven.png',
                   width: 60,
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
@@ -78,11 +104,11 @@ class _PageOneState extends State<PageOne> {
                 bottom: MediaQuery.of(context).size.height * 0.01,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Text(
-                  '$count/4',
+                  '$count/7',
                   style: const TextStyle(
                     color: Colors.yellow,
                     fontWeight: FontWeight.bold,
-                    fontSize: 30,
+                    fontSize: 30, // 4% of screen height
                   ),
                 ),
               ),
@@ -99,8 +125,8 @@ class _PageOneState extends State<PageOne> {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
                     await flutterTts
-                        .speak("Please find all occurrences of number 1");
-                    await Future.delayed(Duration(seconds: 5));
+                        .speak("Please find all occurrences of number 7");
+                    await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
                     await flutterTts.speak(
                         "Por favor, encuentra todas las ocurrencias del número uno");
@@ -118,7 +144,8 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage("You have found all occurrences of number 1");
+                      speakMessage(
+                          "You have found all occurrences of number 7");
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -130,34 +157,55 @@ class _PageOneState extends State<PageOne> {
                   },
                 ),
               ),
-              // Buttons positioned based on the device's orientation
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.10,
-                left: MediaQuery.of(context).size.width * 0.07,
+                top:
+                    MediaQuery.of(context).size.height * 0.64, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.85,
                 child: buildButton(0),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.31,
-                right: MediaQuery.of(context).size.width * 0.40,
+                top:
+                    MediaQuery.of(context).size.height * 0.45, // 5% from bottom
+                left: MediaQuery.of(context).size.width * 0.91,
                 child: buildButton(1),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.35,
-                right: MediaQuery.of(context).size.width * 0.13,
+                bottom:
+                    MediaQuery.of(context).size.height * 0.55, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.25,
                 child: buildButton(2),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.17,
-                right: MediaQuery.of(context).size.width * 0.40,
+                bottom:
+                    MediaQuery.of(context).size.height * 0.17, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.33,
                 child: buildButton(3),
+              ),
+              Positioned(
+                bottom:
+                    MediaQuery.of(context).size.height * 0.62, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.88,
+                child: buildButton(4),
+              ),
+              Positioned(
+                bottom:
+                    MediaQuery.of(context).size.height * 0.78, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.82,
+                child: buildButton(5),
+              ),
+              Positioned(
+                bottom:
+                    MediaQuery.of(context).size.height * 0.88, // 5% from bottom
+                right: MediaQuery.of(context).size.width * 0.39,
+                child: buildButton(6),
               ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: const Text(
-                  'Level 1',
+                  'Level 7',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
@@ -188,7 +236,7 @@ class _PageOneState extends State<PageOne> {
   }
 
   bool allButtonsClicked() {
-    for (var entry  in buttonClicked.entries) {
+    for (var entry in buttonClicked.entries) {
       if (!entry.value) {
         return false;
       }
@@ -207,60 +255,21 @@ class _PageOneState extends State<PageOne> {
         child: IconButton(
           icon: const Icon(Icons.circle),
           color: Colors.transparent,
+          iconSize: 50,
           onPressed: () {
             if (!buttonClicked[index]!) {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
-                if (count == 4) {
-                  _showStarsDialog();
-                  flutterTts.speak("Congratulations!! You have found all occurrences of number 1");
+                if (count == 7) {
+                  speakMessage(
+                      "Congratulations!!!You have found all occurrences of number 7");
                 }
               });
             }
           },
         ),
       ),
-    );
-  }
-
-  void _showStarsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.blueGrey, // Change background color
-          title: const Text(
-            'Congratulations!',
-            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
-          ),
-          content: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.star, color: Colors.yellow, size: 48),
-              SizedBox(width: 10), // Add space between stars
-              Icon(Icons.star, color: Colors.yellow, size: 48),
-              SizedBox(width: 10), // Add space between stars
-              Icon(Icons.star, color: Colors.yellow, size: 48),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.push( // Navigate to PageTwo
-                  context,
-                  MaterialPageRoute(builder: (context) => PageTwo()),
-                );
-              },
-              child: const Text(
-                'Next Level',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }
