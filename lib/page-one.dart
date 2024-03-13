@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/page-two.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
@@ -18,7 +19,8 @@ class _PageOneState extends State<PageOne> {
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
   }
-  Map<int, String> buttonToHint = {0: "one", 1: "three", 2: "four", 3: "five"};
+
+  Map<int, String> buttonToHint = {0: "Reach me through ladded", 1: "I am hanging in water", 2: "I am on arms", 3: "find me in water"};
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -207,13 +209,54 @@ class _PageOneState extends State<PageOne> {
                 count++;
                 buttonClicked[index] = true;
                 if (count == 4) {
-                  flutterTts.speak("You have found all occurrences of number 1");
+                  _showStarsDialog();
+                  flutterTts.speak("Congratulations!! You have found all occurrences of number 1");
                 }
               });
             }
           },
         ),
       ),
+    );
+  }
+
+  void _showStarsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.blueGrey, // Change background color
+          title: const Text(
+            'Congratulations!',
+            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
+          ),
+          content: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.push( // Navigate to PageTwo
+                  context,
+                  MaterialPageRoute(builder: (context) => PageTwo()),
+                );
+              },
+              child: const Text(
+                'Next Level',
+                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
