@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: const Color(0xFF3349BE)),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: const Color(0xFF3349BE)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: ''),
@@ -62,11 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 20), // Add space between counter and images
+              const SizedBox(
+                  height: 20), // Add space between counter and images
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/image1.png'), // Replace 'assets/image1.png' with your image path
+                  Image.asset(
+                      'assets/image1.png'), // Replace 'assets/image1.png' with your image path
                   SizedBox(height: 70), // Add space between images
                   Image.asset('assets/image2.png'),
                 ],
@@ -78,93 +81,93 @@ class _MyHomePageState extends State<MyHomePage> {
           DiagonalWidget3(),
           DiagonalWidget4(),
           Positioned(
-              bottom: 150, // Adjust bottom position as needed
-              left: 100,
-              child: Transform.rotate(
-                angle: -math.pi / 4, // Rotate the square diagonally
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.green, // Set color to green
-                  child: Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+            bottom: 150, // Adjust bottom position as needed
+            left: 100,
+            child: Transform.rotate(
+              angle: -math.pi / 4, // Rotate the square diagonally
+              child: Container(
+                width: 50,
+                height: 50,
+                color: Colors.green, // Set color to green
+                child: Center(
+                  child: Text(
+                    '3',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 150, // Adjust bottom position as needed
-              right: 100,
-              child: Transform.rotate(
-                angle: math.pi / 4, // Rotate the square diagonally
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.red, // Set color to red
-                  child: Center(
-                    child: Text(
-                      '9',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+          ),
+          Positioned(
+            bottom: 150, // Adjust bottom position as needed
+            right: 100,
+            child: Transform.rotate(
+              angle: math.pi / 4, // Rotate the square diagonally
+              child: Container(
+                width: 50,
+                height: 50,
+                color: Colors.red, // Set color to red
+                child: Center(
+                  child: Text(
+                    '9',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 40, // Adjust bottom position as needed
-              left: 100,
-              child: Transform.rotate(
-                angle: -math.pi / 4, // Rotate the square diagonally
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.brown, // Set color to blue
-                  child: Center(
-                    child: Text(
-                      '1',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+          ),
+          Positioned(
+            bottom: 40, // Adjust bottom position as needed
+            left: 100,
+            child: Transform.rotate(
+              angle: -math.pi / 4, // Rotate the square diagonally
+              child: Container(
+                width: 50,
+                height: 50,
+                color: Colors.brown, // Set color to blue
+                child: Center(
+                  child: Text(
+                    '1',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 40, // Adjust bottom position as needed
-              right: 100,
-              child: Transform.rotate(
-                angle: math.pi / 4, // Rotate the square diagonally
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.yellow, // Set color to yellow
-                  child: Center(
-                    child: Text(
-                      '4',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+          ),
+          Positioned(
+            bottom: 40, // Adjust bottom position as needed
+            right: 100,
+            child: Transform.rotate(
+              angle: math.pi / 4, // Rotate the square diagonally
+              child: Container(
+                width: 50,
+                height: 50,
+                color: Colors.yellow, // Set color to yellow
+                child: Center(
+                  child: Text(
+                    '4',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
             ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -182,9 +185,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(252, 170, 214, 1),
-                      onPrimary: Colors.black,
-                      minimumSize: const Size(200, 50), // Set minimum width and height for button
+                      foregroundColor: Colors.black,
+                      backgroundColor: Color.fromRGBO(252, 170, 214, 1),
+                      minimumSize: const Size(
+                          200, 50), // Set minimum width and height for button
                     ),
                     icon: Icon(Icons.home, size: 30), // Add icon to the button
                     label: Text(
