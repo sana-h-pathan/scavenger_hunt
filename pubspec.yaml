@@ -73,10 +73,16 @@ flutter:
     - assets/two.jpg
     - assets/three.jpg
     - assets/four.jpg
+    - assets/five.jpg
+    - assets/six.jpg
+    - assets/seven.jpg
     - assets/one.png
     - assets/two.png
     - assets/three.png
     - assets/four.png
+    - assets/five.png
+    - assets/six.png
+    - assets/seven.png
     - assets/numberlevel.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

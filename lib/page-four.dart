@@ -152,9 +152,9 @@ class _PageFourState extends State<PageFour> {
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: const Text(
-                  'Level 4',
+                  'Find 4',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),

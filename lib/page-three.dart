@@ -151,7 +151,7 @@ class _PageThreeState extends State<PageThree> {
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: const Text(
-                  'Level 3',
+                  'Find 3',
                   style: TextStyle(
                     color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,

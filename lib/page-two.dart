@@ -151,7 +151,7 @@ class _PageTwoState extends State<PageTwo> {
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: const Text(
-                  'Level 2',
+                  'Find 2',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,

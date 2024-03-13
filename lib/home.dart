@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 1),
                         const Text(
-                          'SHAPES',
+                          'Flip the Card',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 40,
@@ -141,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           const Text(
-                            'SYMBOLS',
+                            'Number Sequence',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 40,
