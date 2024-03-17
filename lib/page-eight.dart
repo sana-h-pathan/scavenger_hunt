@@ -197,12 +197,12 @@ class _PageEightState extends State<PageEight> {
       color: Colors.transparent,
       child: Ink(
         decoration: const ShapeDecoration(
-          color: Colors.black,
+          color: Colors.transparent,
           shape: CircleBorder(),
         ),
         child: IconButton(
           icon: const Icon(Icons.circle),
-          color: Colors.black,
+          color: Colors.transparent,
           onPressed: () {
             if (!buttonClicked[index]!) {
               setState(() {
