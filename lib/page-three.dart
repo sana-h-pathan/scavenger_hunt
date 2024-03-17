@@ -154,8 +154,8 @@ class _PageThreeState extends State<PageThree> {
                   'Find 3',
                   style: TextStyle(
                     color: Colors.lightBlue,
-                    fontWeight: FontWeight.bold,
                     fontSize: 40,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

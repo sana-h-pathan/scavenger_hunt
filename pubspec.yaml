@@ -76,6 +76,12 @@ flutter:
     - assets/five.jpg
     - assets/six.jpg
     - assets/seven.jpg
+    - assets/five.jpg
+    - assets/six.jpg
+    - assets/seven.jpg
+    - assets/eight.jpg
+    - assets/nine.jpg
+    - assets/ten.jpg
     - assets/one.png
     - assets/two.png
     - assets/three.png
@@ -83,6 +89,9 @@ flutter:
     - assets/five.png
     - assets/six.png
     - assets/seven.png
+    - assets/eight.png
+    - assets/nine.png
+    - assets/ten.png
     - assets/numberlevel.jpg
     - assets/flipcard.png
     - assets/sequence.png

@@ -19,7 +19,7 @@ class _PageTwoState extends State<PageTwo> {
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
   }
-  Map<int, String> buttonToHint = {0: "I am on fish stomach", 1: "three", 2: "four", 3: "five"};
+  Map<int, String> buttonToHint = {0: "I am on fish", 1: "Look inside the castle", 2: "Sorrounded by fishes", 3: "I am on reeves"};
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {

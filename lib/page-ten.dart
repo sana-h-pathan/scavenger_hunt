@@ -44,7 +44,7 @@ class _PageTenState extends State<PageTen> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                   Expanded(
                     child: Image.asset(
-                      'assets/ten.png',
+                      'assets/ten.jpg',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
@@ -68,7 +68,7 @@ class _PageTenState extends State<PageTen> {
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Image.asset(
-                  'assets/number 10.png',
+                  'assets/ten.png',
                   width: 60,
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),

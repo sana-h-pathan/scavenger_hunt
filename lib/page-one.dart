@@ -20,7 +20,7 @@ class _PageOneState extends State<PageOne> {
     await flutterTts.speak(message);
   }
 
-  Map<int, String> buttonToHint = {0: "Reach me through ladded", 1: "I am hanging in water", 2: "I am on arms", 3: "find me in water"};
+  Map<int, String> buttonToHint = {0: "Reach me through ladded", 1: "I am hanging in water", 2: "I am on arms", 3: "Below the stone"};
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -53,17 +53,22 @@ class _PageOneState extends State<PageOne> {
                 ],
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.02,
-                left: MediaQuery.of(context).size.width * 0.25,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.refresh,
-                    size: 60,
-                  ),
-                  color: Colors.yellow,
-                  onPressed: resetCountAndButtons,
-                ),
-              ),
+  bottom: MediaQuery.of(context).size.height * 0.02,
+  left: MediaQuery.of(context).size.width * 0.25,
+  child: Tooltip(
+    message: 'Reset', // Tooltip message
+    child: IconButton(
+      icon: const Icon(
+        Icons.refresh,
+        size: 60,
+      ),
+      color: Colors.yellow,
+      onPressed: resetCountAndButtons,
+    ),
+  ),
+),
+
+
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
