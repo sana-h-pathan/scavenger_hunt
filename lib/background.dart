@@ -4,7 +4,7 @@ class BackgroundGradient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft, // Change the begin alignment
           end: Alignment.bottomRight, // Change the end alignment

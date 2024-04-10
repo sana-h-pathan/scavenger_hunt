@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/page-three.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
@@ -20,7 +21,7 @@ class _PageFourState extends State<PageFour> {
   }
 
 
-  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "four"};
+  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "find me in water"};
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -151,9 +152,9 @@ class _PageFourState extends State<PageFour> {
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: const Text(
-                  'Level 4',
+                  'Find 4',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
@@ -208,6 +209,7 @@ class _PageFourState extends State<PageFour> {
                 count++;
                 buttonClicked[index] = true;
                 if (count == 4) {
+                  _showStarsDialog();
                   speakMessage("Congratulations!!!You have found all occurrences of number 4");
                 }
               });
@@ -215,6 +217,46 @@ class _PageFourState extends State<PageFour> {
           },
         ),
       ),
+    );
+  }
+
+  void _showStarsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.blueGrey, // Change background color
+          title: const Text(
+            'Congratulations!',
+            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
+          ),
+          content: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.push( // Navigate to PageTwo
+                  context,
+                  MaterialPageRoute(builder: (context) => PageThree()),
+                );
+              },
+              child: const Text(
+                'Next Level',
+                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

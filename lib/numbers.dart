@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scavanger_hunt/number-memory.dart';
+import 'package:scavanger_hunt/page-eight.dart';
+import 'package:scavanger_hunt/page-five.dart';
+import 'package:scavanger_hunt/page-nine.dart';
+import 'package:scavanger_hunt/page-seven.dart';
+import 'package:scavanger_hunt/page-six.dart';
+import 'package:scavanger_hunt/page-ten.dart';
 import 'dart:math' as math;
 import 'header.dart';
 import 'background.dart';
@@ -148,6 +154,42 @@ class NumbersPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PageFour()),
+            );
+            break;
+          case 4:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageFive()),
+            );
+            break;
+          case 5:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageSix()),
+            );
+            break;
+          case 6:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageSeven()),
+            );
+            break;
+            case 7:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageEight()),
+            );
+            break;
+          case 8:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageNine()),
+            );
+            break;
+          case 9:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PageTen()),
             );
             break;
           // Add cases for other button clicks similarly

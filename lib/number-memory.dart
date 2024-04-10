@@ -1,11 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'background.dart';
 import 'header.dart';
 import 'home.dart';
 import 'dart:async';
-
 
 class NumberMemoryGame extends StatelessWidget {
   @override
@@ -42,7 +40,7 @@ class NumberMemoryGame extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
                 },
               ),
@@ -80,7 +78,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
   }
 
   void initializeGame() {
-    numbers = [];
+  setState(() {
     var random = Random();
     Set<int> uniqueNumbers = Set();
 
@@ -89,6 +87,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
       uniqueNumbers.add(randomNumber);
     }
 
+    numbers = [];
     uniqueNumbers.forEach((number) {
       numbers.add(number);
       numbers.add(number);
@@ -96,7 +95,11 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
 
     numbers.shuffle();
     cardVisible = List.filled(numbers.length, false);
-  }
+    flippedIndices.clear();
+    isProcessing = false;
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +132,12 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
             }
           },
           child: Padding(
-            padding: EdgeInsets.all(8.0), // Add padding to each box
+            padding: const EdgeInsets.all(8.0), // Add padding to each box
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: cardVisible[index]
-                      ? [Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
+                      ? [const Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), const Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
                       : [Colors.pink.withOpacity(0.8), Colors.blue.withOpacity(0.6)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -145,7 +148,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               height: boxHeight,
               child: Center(
                 child: Text(
-                  cardVisible[index] ? '${numbers[index]}' : '',
+                  cardVisible[index] ? '${_getDisplayContent(index)}' : '',
                   style: const TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
@@ -158,6 +161,43 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
         );
       },
     );
+  }
+
+  String _getDisplayContent(int index) {
+    // Return digit for even indices and spelling for odd indices
+    int number = numbers[index];
+    if (index.isEven) {
+      return '$number';
+    } else {
+      return _getSpelledNumber(number);
+    }
+  }
+
+  String _getSpelledNumber(int number) {
+    switch (number) {
+      case 1:
+        return 'One';
+      case 2:
+        return 'Two';
+      case 3:
+        return 'Three';
+      case 4:
+        return 'Four';
+      case 5:
+        return 'Five';
+      case 6:
+        return 'Six';
+      case 7:
+        return 'Seven';
+      case 8:
+        return 'Eight';
+      case 9:
+        return 'Nine';
+      case 10:
+        return 'Ten';
+      default:
+        return '';
+    }
   }
 
   void checkMatch() {
@@ -175,9 +215,74 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
       setState(() {
         flippedIndices.clear();
         isProcessing = false;
+
+        if (cardVisible.every((visible) => visible)) {
+          // All cards are matched, show congratulatory dialog
+          _showCongratulationDialog();
+        }
       });
     }
   }
-}
 
+  void _showCongratulationDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.grey[900], // Change background color
+        title: const Text(
+          'Congratulations!',
+          style: TextStyle(
+            color: Colors.green, // Change text color
+            fontSize: 30.0, // Increase font size
+          ),
+        ),
+        content: const Text(
+          'You tapped all numbers in the correct sequence!',
+          style: TextStyle(
+            color: Colors.white, // Change text color
+            fontSize: 24.0, // Increase font size
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+            },
+            child: const Text('OK',
+            style: TextStyle(
+                color: Colors.white, // Change text color
+                fontSize: 18.0, // Increase font size
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              initializeGame(); // Reset the game
+            },
+            child: const Text('Replay',
+            style: TextStyle(
+                color: Colors.white, // Change text color
+                fontSize: 18.0, // Increase font size
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context); // Go back to the home screen
+            },
+            child: const Text(
+              'Home',
+              style: TextStyle(
+                color: Colors.white, // Change text color
+                fontSize: 18.0, // Increase font size
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 

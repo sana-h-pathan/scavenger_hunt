@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/match-sequence.dart';
 import 'package:scavanger_hunt/number-memory.dart';
 import 'header.dart';
 import 'numbers.dart'; // Import the NumbersPage
@@ -93,13 +94,13 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/shapes.png',
+                          'assets/flipcard.png',
                           height: 300, // Set the height to adjust the size
                           width: 300, // Set the width to adjust the size
                         ),
                         const SizedBox(height: 1),
                         const Text(
-                          'SHAPES',
+                          'Flip the Card',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 40,
@@ -126,18 +127,21 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        // Navigate to symbols page
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NumberSequenceQuiz()),
+                        );
                       },
                       child: Column(
                         children: [
                           Image.asset(
-                            'assets/symbols.png',
+                            'assets/sequence.png',
                             height: 300, // Set the height to adjust the size
                             width: 300, // Set the width to adjust the size
                           ),
                           const SizedBox(height: 10),
                           const Text(
-                            'SYMBOLS',
+                            'Number Sequence',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 40,
