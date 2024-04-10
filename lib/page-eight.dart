@@ -20,7 +20,12 @@ class _PageEightState extends State<PageEight> {
     await flutterTts.speak(message);
   }
 
-  Map<int, String> buttonToHint = {0: "I am on yellow slide", 1: "I am hanging on the balloon", 2: "Reach me through the water slide", 3: "find me near the pool"};
+  Map<int, String> buttonToHint = {
+    0: "I am on yellow slide",
+    1: "I am hanging on the balloon",
+    2: "Reach me through the water slide",
+    3: "find me near the pool"
+  };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -97,10 +102,12 @@ class _PageEightState extends State<PageEight> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
-                    await flutterTts.speak("Please find all occurrences of number eight");
+                    await flutterTts
+                        .speak("Please find all occurrences of number eight");
                     await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número ocho");
+                    await flutterTts.speak(
+                        "Por favor, encuentra todas las ocurrencias del número ocho");
                   },
                 ),
               ),
@@ -115,7 +122,8 @@ class _PageEightState extends State<PageEight> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage("You have found all occurrences of number 8");
+                      speakMessage(
+                          "You have found all occurrences of number 8");
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -164,7 +172,8 @@ class _PageEightState extends State<PageEight> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
+                    MaterialPageRoute(
+                        builder: (context) => Numbers.NumbersPage()),
                   );
                 },
               ),
@@ -176,6 +185,7 @@ class _PageEightState extends State<PageEight> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },
@@ -184,7 +194,7 @@ class _PageEightState extends State<PageEight> {
   }
 
   bool allButtonsClicked() {
-    for (var entry  in buttonClicked.entries) {
+    for (var entry in buttonClicked.entries) {
       if (!entry.value) {
         return false;
       }
@@ -210,7 +220,8 @@ class _PageEightState extends State<PageEight> {
                 buttonClicked[index] = true;
                 if (count == 4) {
                   _showStarsDialog();
-                  flutterTts.speak("Congratulations!! You have found all occurrences of number 8");
+                  flutterTts.speak(
+                      "Congratulations!! You have found all occurrences of number 8");
                 }
               });
             }
@@ -228,7 +239,9 @@ class _PageEightState extends State<PageEight> {
           backgroundColor: Colors.blueGrey, // Change background color
           title: const Text(
             'Congratulations!',
-            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
+            style: TextStyle(
+                color: Colors.yellow,
+                fontSize: 30), // Change text color and size
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -244,14 +257,17 @@ class _PageEightState extends State<PageEight> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                Navigator.push( // Navigate to PageTwo
+                Navigator.push(
+                  // Navigate to PageTwo
                   context,
                   MaterialPageRoute(builder: (context) => PageNine()),
                 );
               },
               child: const Text(
                 'Next Level',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18), // Change button text color and size
               ),
             ),
           ],

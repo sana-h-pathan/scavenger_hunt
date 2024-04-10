@@ -51,6 +51,7 @@ class NumberSequenceQuiz extends StatelessWidget {
                   );
                 },
               ),
+              LanguageWidget(),
             ],
           );
         },
@@ -61,7 +62,8 @@ class NumberSequenceQuiz extends StatelessWidget {
 
 class NumberSequenceQuizScreen extends StatefulWidget {
   @override
-  _NumberSequenceQuizScreenState createState() => _NumberSequenceQuizScreenState();
+  _NumberSequenceQuizScreenState createState() =>
+      _NumberSequenceQuizScreenState();
 }
 
 class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
@@ -86,15 +88,13 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 0; i < 4; i++)
-                    _buildNumberContainer(i),
+                  for (int i = 0; i < 4; i++) _buildNumberContainer(i),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 4; i < 8; i++)
-                    _buildNumberContainer(i),
+                  for (int i = 4; i < 8; i++) _buildNumberContainer(i),
                 ],
               ),
               Row(
@@ -114,7 +114,8 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
   Widget _buildNumberContainer(int index) {
     return GestureDetector(
       onTap: () {
-        if (!completed) { // Check if sequence is completed
+        if (!completed) {
+          // Check if sequence is completed
           if (numbers[index] == currentIndex + 1) {
             setState(() {
               currentIndex++;
@@ -242,4 +243,3 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
     );
   }
 }
-

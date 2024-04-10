@@ -41,7 +41,9 @@ class _PageThreeState extends State<PageThree> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.07), // 10% top padding
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.07), // 10% top padding
                   Expanded(
                     child: Image.asset(
                       'assets/three.jpg',
@@ -49,7 +51,9 @@ class _PageThreeState extends State<PageThree> {
                       width: double.infinity,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.11), // 10% bottom padding
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.11), // 10% bottom padding
                 ],
               ),
               Positioned(
@@ -97,10 +101,12 @@ class _PageThreeState extends State<PageThree> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
-                    await flutterTts.speak("Please find all occurrences of number 3");
+                    await flutterTts
+                        .speak("Please find all occurrences of number 3");
                     await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número uno");
+                    await flutterTts.speak(
+                        "Por favor, encuentra todas las ocurrencias del número uno");
                   },
                 ),
               ),
@@ -115,7 +121,8 @@ class _PageThreeState extends State<PageThree> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage("You have found all occurrences of number 4");
+                      speakMessage(
+                          "You have found all occurrences of number 4");
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -128,22 +135,26 @@ class _PageThreeState extends State<PageThree> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.15, // 5% from bottom
+                top:
+                    MediaQuery.of(context).size.height * 0.15, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.05,
                 child: buildButton(0),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.31, // 5% from bottom
+                top:
+                    MediaQuery.of(context).size.height * 0.31, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: buildButton(1),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.40, // 5% from bottom
+                bottom:
+                    MediaQuery.of(context).size.height * 0.40, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.07,
                 child: buildButton(2),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.26, // 5% from bottom
+                bottom:
+                    MediaQuery.of(context).size.height * 0.26, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.03,
                 child: buildButton(3),
               ),
@@ -163,7 +174,8 @@ class _PageThreeState extends State<PageThree> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
+                    MaterialPageRoute(
+                        builder: (context) => Numbers.NumbersPage()),
                   );
                 },
               ),
@@ -175,6 +187,7 @@ class _PageThreeState extends State<PageThree> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },
@@ -183,7 +196,7 @@ class _PageThreeState extends State<PageThree> {
   }
 
   bool allButtonsClicked() {
-    for (var entry  in buttonClicked.entries) {
+    for (var entry in buttonClicked.entries) {
       if (!entry.value) {
         return false;
       }
@@ -227,7 +240,9 @@ class _PageThreeState extends State<PageThree> {
           backgroundColor: Colors.blueGrey, // Change background color
           title: const Text(
             'Congratulations!',
-            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
+            style: TextStyle(
+                color: Colors.yellow,
+                fontSize: 30), // Change text color and size
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -243,14 +258,17 @@ class _PageThreeState extends State<PageThree> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                Navigator.push( // Navigate to PageTwo
+                Navigator.push(
+                  // Navigate to PageTwo
                   context,
                   MaterialPageRoute(builder: (context) => PageFour()),
                 );
               },
               child: const Text(
                 'Next Level',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18), // Change button text color and size
               ),
             ),
           ],

@@ -52,6 +52,7 @@ class NumberMemoryGame extends StatelessWidget {
                   );
                 },
               ),
+              LanguageWidget(),
             ],
           );
         },
@@ -78,28 +79,27 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
   }
 
   void initializeGame() {
-  setState(() {
-    var random = Random();
-    Set<int> uniqueNumbers = Set();
+    setState(() {
+      var random = Random();
+      Set<int> uniqueNumbers = Set();
 
-    while (uniqueNumbers.length < 6) {
-      int randomNumber = random.nextInt(10) + 1;
-      uniqueNumbers.add(randomNumber);
-    }
+      while (uniqueNumbers.length < 6) {
+        int randomNumber = random.nextInt(10) + 1;
+        uniqueNumbers.add(randomNumber);
+      }
 
-    numbers = [];
-    uniqueNumbers.forEach((number) {
-      numbers.add(number);
-      numbers.add(number);
+      numbers = [];
+      uniqueNumbers.forEach((number) {
+        numbers.add(number);
+        numbers.add(number);
+      });
+
+      numbers.shuffle();
+      cardVisible = List.filled(numbers.length, false);
+      flippedIndices.clear();
+      isProcessing = false;
     });
-
-    numbers.shuffle();
-    cardVisible = List.filled(numbers.length, false);
-    flippedIndices.clear();
-    isProcessing = false;
-  });
-}
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,21 +107,26 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     // Calculate the width and height for each box
-    double boxWidth = (screenWidth - 50) / 4; // Adjust 50 according to your padding requirements
-    double boxHeight = (screenHeight * 0.6) / 3; // Assuming you want 3 rows and 60% of screen height for cards
+    double boxWidth = (screenWidth - 50) /
+        4; // Adjust 50 according to your padding requirements
+    double boxHeight = (screenHeight * 0.6) /
+        3; // Assuming you want 3 rows and 60% of screen height for cards
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
-        childAspectRatio: boxWidth / boxHeight, // Set aspect ratio based on calculated width and height
+        childAspectRatio: boxWidth /
+            boxHeight, // Set aspect ratio based on calculated width and height
       ),
       itemCount: numbers.length,
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            if (!isProcessing && !flippedIndices.contains(index) && !cardVisible[index]) {
+            if (!isProcessing &&
+                !flippedIndices.contains(index) &&
+                !cardVisible[index]) {
               setState(() {
                 cardVisible[index] = true;
                 flippedIndices.add(index);
@@ -137,8 +142,16 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: cardVisible[index]
-                      ? [const Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), const Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
-                      : [Colors.pink.withOpacity(0.8), Colors.blue.withOpacity(0.6)],
+                      ? [
+                          const Color.fromARGB(255, 159, 18, 18)
+                              .withOpacity(0.8),
+                          const Color.fromARGB(255, 186, 204, 29)
+                              .withOpacity(0.6)
+                        ]
+                      : [
+                          Colors.pink.withOpacity(0.8),
+                          Colors.blue.withOpacity(0.6)
+                        ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -248,8 +261,9 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
             onPressed: () {
               Navigator.pop(context); // Close dialog
             },
-            child: const Text('OK',
-            style: TextStyle(
+            child: const Text(
+              'OK',
+              style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
               ),
@@ -260,8 +274,9 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               Navigator.pop(context); // Close dialog
               initializeGame(); // Reset the game
             },
-            child: const Text('Replay',
-            style: TextStyle(
+            child: const Text(
+              'Replay',
+              style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
               ),
@@ -285,4 +300,3 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     );
   }
 }
-

@@ -95,6 +95,8 @@ flutter:
     - assets/numberlevel.jpg
     - assets/flipcard.png
     - assets/sequence.png
+    - assets/texts/en-US.json
+    - assets/texts/es-ES.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

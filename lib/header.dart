@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:scavanger_hunt/numbers.dart' as Numbers; // Rename the import using 'as'
-
+import 'package:scavanger_hunt/numbers.dart'
+    as Numbers; // Rename the import using 'as'
 
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_language.dart';
 
 class ScavengerHuntText extends StatelessWidget {
   const ScavengerHuntText({Key? key}) : super(key: key);
@@ -65,7 +66,6 @@ class ScavengerHuntText extends StatelessWidget {
   }
 }
 
-
 class DiagonalWidget1 extends StatelessWidget {
   const DiagonalWidget1({Key? key}) : super(key: key);
 
@@ -79,7 +79,7 @@ class DiagonalWidget1 extends StatelessWidget {
         child: Container(
           width: 50,
           height: 50,
-          color:  Color.fromRGBO(233, 30, 90, 1), // Set color to green
+          color: Color.fromRGBO(233, 30, 90, 1), // Set color to green
           child: Center(
             child: Text(
               '3',
@@ -203,15 +203,16 @@ class HomeWidget extends StatelessWidget {
         ),
         iconSize: 36,
         onPressed: () {
-                  Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
-              );// Handle home button press here
-            },
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
+          ); // Handle home button press here
+        },
       ),
     );
   }
 }
+
 class MenuWidget extends StatelessWidget {
   const MenuWidget({Key? key, required this.onPressed}) : super(key: key);
 
@@ -234,4 +235,50 @@ class MenuWidget extends StatelessWidget {
   }
 }
 
+class LanguageWidget extends StatefulWidget {
+  const LanguageWidget({Key? key}) : super(key: key);
 
+  @override
+  _LanguageWidgetState createState() => _LanguageWidgetState();
+}
+
+class _LanguageWidgetState extends State<LanguageWidget> {
+  // Initial language set to English
+  String currentLanguage = "en-US";
+  // Language options
+  final List<Map<String, String>> languageOptions = [
+    {"code": "en-US", "name": "English"},
+    {"code": "es-ES", "name": "Español"},
+  ];
+
+  void _changeLanguage(String? newLanguageCode) {
+    if (newLanguageCode != null) {
+      setState(() {
+        currentLanguage = newLanguageCode;
+        AppLanguage().currentLanguage =
+            newLanguageCode; // Update global language state
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.02,
+      right: MediaQuery.of(context).size.width *
+          0.15, // Adjust based on your layout
+      child: DropdownButton<String>(
+        underline: Container(), // Removes the underline of the dropdown button
+        icon: const Icon(Icons.mic, color: Colors.black),
+        value: currentLanguage,
+        items: languageOptions.map((language) {
+          return DropdownMenuItem<String>(
+            value: language["code"],
+            child: Text(language["name"]!),
+          );
+        }).toList(),
+        onChanged: _changeLanguage,
+      ),
+    );
+  }
+}

@@ -228,6 +228,7 @@ class _PageSevenState extends State<PageSeven> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },

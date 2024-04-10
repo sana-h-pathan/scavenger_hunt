@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:scavanger_hunt/page-two.dart';
 import 'header.dart';
@@ -5,6 +6,8 @@ import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:scavanger_hunt/app_language.dart';
 
 class PageOne extends StatefulWidget {
   @override
@@ -14,8 +17,19 @@ class PageOne extends StatefulWidget {
 class _PageOneState extends State<PageOne> {
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage(String message) async {
+  Future<void> speakMessage_OLD(String message) async {
     await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+
+  Future<void> speakMessage(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+    String message = texts[messageKey];
+    await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
   }
@@ -104,14 +118,7 @@ class _PageOneState extends State<PageOne> {
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
-                    await flutterTts.setLanguage("en-US");
-                    await flutterTts.setPitch(1.0);
-                    await flutterTts
-                        .speak("Please find all occurrences of number one");
-                    await Future.delayed(const Duration(seconds: 5));
-                    await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak(
-                        "Por favor, encuentra todas las ocurrencias del número uno");
+                    speakMessage("page_one_message");
                   },
                 ),
               ),
@@ -189,6 +196,7 @@ class _PageOneState extends State<PageOne> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },

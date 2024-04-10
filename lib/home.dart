@@ -8,7 +8,6 @@ import 'numbers.dart'; // Import the NumbersPage
 import 'background.dart';
 import 'page-one.dart';
 
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -34,20 +33,21 @@ class HomeScreen extends StatelessWidget {
           const DiagonalWidget4(),
           HomeWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
           MenuWidget(
             onPressed: () {
-                  Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
+              ); // Handle home button press here
             },
           ),
+          LanguageWidget(),
           Positioned(
             top: 300, // Adjust top position as needed
             left: 0,
@@ -88,7 +88,8 @@ class HomeScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => NumberMemoryGame()),
+                        MaterialPageRoute(
+                            builder: (context) => NumberMemoryGame()),
                       );
                     },
                     child: Column(
@@ -127,9 +128,10 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                          Navigator.push(
+                        Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NumberSequenceQuiz()),
+                          MaterialPageRoute(
+                              builder: (context) => NumberSequenceQuiz()),
                         );
                       },
                       child: Column(

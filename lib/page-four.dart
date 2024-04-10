@@ -20,8 +20,12 @@ class _PageFourState extends State<PageFour> {
     await flutterTts.speak(message);
   }
 
-
-  Map<int, String> buttonToHint = {0: "one", 1: "two", 2: "three", 3: "find me in water"};
+  Map<int, String> buttonToHint = {
+    0: "one",
+    1: "two",
+    2: "three",
+    3: "find me in water"
+  };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -42,7 +46,9 @@ class _PageFourState extends State<PageFour> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.07), // 10% top padding
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.07), // 10% top padding
                   Expanded(
                     child: Image.asset(
                       'assets/four.jpg',
@@ -50,7 +56,9 @@ class _PageFourState extends State<PageFour> {
                       width: double.infinity,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.11), // 10% bottom padding
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.11), // 10% bottom padding
                 ],
               ),
               Positioned(
@@ -98,10 +106,12 @@ class _PageFourState extends State<PageFour> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1.0);
-                    await flutterTts.speak("Please find all occurrences of number four");
+                    await flutterTts
+                        .speak("Please find all occurrences of number four");
                     await Future.delayed(const Duration(seconds: 5));
                     await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak("Por favor, encuentra todas las ocurrencias del número uno");
+                    await flutterTts.speak(
+                        "Por favor, encuentra todas las ocurrencias del número uno");
                   },
                 ),
               ),
@@ -116,7 +126,8 @@ class _PageFourState extends State<PageFour> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage("You have found all occurrences of number 4");
+                      speakMessage(
+                          "You have found all occurrences of number 4");
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -129,22 +140,26 @@ class _PageFourState extends State<PageFour> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.31, // 5% from bottom
+                top:
+                    MediaQuery.of(context).size.height * 0.31, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.37,
                 child: buildButton(0),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.48, // 5% from bottom
+                top:
+                    MediaQuery.of(context).size.height * 0.48, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.04,
                 child: buildButton(1),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.37, // 5% from bottom
+                bottom:
+                    MediaQuery.of(context).size.height * 0.37, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.43,
                 child: buildButton(2),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.16, // 5% from bottom
+                bottom:
+                    MediaQuery.of(context).size.height * 0.16, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.12,
                 child: buildButton(3),
               ),
@@ -164,7 +179,8 @@ class _PageFourState extends State<PageFour> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Numbers.NumbersPage()),
+                    MaterialPageRoute(
+                        builder: (context) => Numbers.NumbersPage()),
                   );
                 },
               ),
@@ -176,6 +192,7 @@ class _PageFourState extends State<PageFour> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },
@@ -184,7 +201,7 @@ class _PageFourState extends State<PageFour> {
   }
 
   bool allButtonsClicked() {
-    for (var entry  in buttonClicked.entries) {
+    for (var entry in buttonClicked.entries) {
       if (!entry.value) {
         return false;
       }
@@ -210,7 +227,8 @@ class _PageFourState extends State<PageFour> {
                 buttonClicked[index] = true;
                 if (count == 4) {
                   _showStarsDialog();
-                  speakMessage("Congratulations!!!You have found all occurrences of number 4");
+                  speakMessage(
+                      "Congratulations!!!You have found all occurrences of number 4");
                 }
               });
             }
@@ -228,7 +246,9 @@ class _PageFourState extends State<PageFour> {
           backgroundColor: Colors.blueGrey, // Change background color
           title: const Text(
             'Congratulations!',
-            style: TextStyle(color: Colors.yellow, fontSize: 30), // Change text color and size
+            style: TextStyle(
+                color: Colors.yellow,
+                fontSize: 30), // Change text color and size
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -244,14 +264,17 @@ class _PageFourState extends State<PageFour> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                Navigator.push( // Navigate to PageTwo
+                Navigator.push(
+                  // Navigate to PageTwo
                   context,
                   MaterialPageRoute(builder: (context) => PageThree()),
                 );
               },
               child: const Text(
                 'Next Level',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Change button text color and size
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18), // Change button text color and size
               ),
             ),
           ],

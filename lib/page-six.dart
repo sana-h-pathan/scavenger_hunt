@@ -219,6 +219,7 @@ class _PageSixState extends State<PageSix> {
                   );
                 },
               ),
+              LanguageWidget()
             ],
           );
         },

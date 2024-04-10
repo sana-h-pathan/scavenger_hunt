@@ -46,6 +46,7 @@ class NumbersPage extends StatelessWidget {
               ); // Handle home button press here
             },
           ),
+          LanguageWidget(),
           // Number buttons and connecting lines
           ..._buildNumberButtons(context),
         ],
@@ -67,7 +68,9 @@ class NumbersPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height * 0.19), // 10% top padding
+        SizedBox(
+            height:
+                MediaQuery.of(context).size.height * 0.19), // 10% top padding
         Expanded(
           child: Image.asset(
             'assets/numberlevel.jpg',
@@ -75,7 +78,9 @@ class NumbersPage extends StatelessWidget {
             width: double.infinity,
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02), // 10% bottom padding
+        SizedBox(
+            height: MediaQuery.of(context).size.height *
+                0.02), // 10% bottom padding
       ],
     );
   }
@@ -116,12 +121,8 @@ class NumbersPage extends StatelessWidget {
 
     for (int i = 0; i < buttonPositions.length - 1; i++) {
       Widget line = CustomPaint(
-        painter: LinePainter(
-            buttonPositions[i].dx,
-            buttonPositions[i].dy,
-            buttonPositions[i + 1].dx,
-            buttonPositions[i + 1].dy,
-            buttonSize),
+        painter: LinePainter(buttonPositions[i].dx, buttonPositions[i].dy,
+            buttonPositions[i + 1].dx, buttonPositions[i + 1].dy, buttonSize),
       );
       buttons.add(line);
     }
@@ -174,7 +175,7 @@ class NumbersPage extends StatelessWidget {
               MaterialPageRoute(builder: (context) => PageSeven()),
             );
             break;
-            case 7:
+          case 7:
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PageEight()),
@@ -252,8 +253,8 @@ class LinePainter extends CustomPainter {
     double adjustedEndX = endX - normalizedDx * (buttonSize / 2);
     double adjustedEndY = endY - normalizedDy * (buttonSize / 2);
 
-    canvas.drawLine(
-        Offset(adjustedStartX, adjustedStartY), Offset(adjustedEndX, adjustedEndY), paint);
+    canvas.drawLine(Offset(adjustedStartX, adjustedStartY),
+        Offset(adjustedEndX, adjustedEndY), paint);
   }
 
   @override
