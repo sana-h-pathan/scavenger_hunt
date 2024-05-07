@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
+import 'package:scavanger_hunt/page-seven.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageSix extends StatefulWidget {
   @override
@@ -11,6 +17,9 @@ class PageSix extends StatefulWidget {
 }
 
 class _PageSixState extends State<PageSix> {
+  Timer? _timer;
+  int _start = 60;
+
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String message) async {
@@ -47,11 +56,59 @@ class _PageSixState extends State<PageSix> {
         4: false,
         5: false
       };
+      resetTimer();
+      AppScore().setStageScore(6, 0);
+    });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(1, 0);
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -155,6 +212,18 @@ class _PageSixState extends State<PageSix> {
                 ),
               ),
               Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
+                ),
+              ),
+              Positioned(
                 top:
                     MediaQuery.of(context).size.height * 0.66, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.43,
@@ -254,7 +323,9 @@ class _PageSixState extends State<PageSix> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().setStageScore(6, AppScore().getStageScore(6)! + 100);
                 if (count == 6) {
+                  _showStarsDialog();
                   speakMessage(
                       "Congratulations!!!You have found all occurrences of number 6");
                 }
@@ -263,6 +334,51 @@ class _PageSixState extends State<PageSix> {
           },
         ),
       ),
+    );
+  }
+
+  void _showStarsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.blueGrey, // Change background color
+          title: const Text(
+            'Congratulations!',
+            style: TextStyle(
+                color: Colors.yellow,
+                fontSize: 30), // Change text color and size
+          ),
+          content: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+              SizedBox(width: 10), // Add space between stars
+              Icon(Icons.star, color: Colors.yellow, size: 48),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.push(
+                  // Navigate to PageTwo
+                  context,
+                  MaterialPageRoute(builder: (context) => PageSeven()),
+                );
+              },
+              child: const Text(
+                'Next Level',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18), // Change button text color and size
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

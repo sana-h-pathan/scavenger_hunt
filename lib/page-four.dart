@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:flutter/material.dart';
-import 'package:scavanger_hunt/page-three.dart';
+import 'package:scavanger_hunt/page-five.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageFour extends StatefulWidget {
   @override
@@ -12,12 +17,20 @@ class PageFour extends StatefulWidget {
 }
 
 class _PageFourState extends State<PageFour> {
+  Timer? _timer;
+  int _start = 60;
   int count = 0;
+
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage(String message) async {
-    await flutterTts.setLanguage("en-US");
+  Future<void> speakMessage(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+    // String message = texts[messageKey];
+    await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
+    await flutterTts.speak(messageKey);
   }
 
   Map<int, String> buttonToHint = {
@@ -32,11 +45,60 @@ class _PageFourState extends State<PageFour> {
     setState(() {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      resetTimer();
+      AppScore().setStageScore(4, 0);
+    });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(4, 0);
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -140,6 +202,18 @@ class _PageFourState extends State<PageFour> {
                 ),
               ),
               Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
+                ),
+              ),
+              Positioned(
                 top:
                     MediaQuery.of(context).size.height * 0.31, // 5% from bottom
                 left: MediaQuery.of(context).size.width * 0.37,
@@ -226,6 +300,7 @@ class _PageFourState extends State<PageFour> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().setStageScore(4, AppScore().getStageScore(4)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   speakMessage(
@@ -268,7 +343,7 @@ class _PageFourState extends State<PageFour> {
                 Navigator.push(
                   // Navigate to PageTwo
                   context,
-                  MaterialPageRoute(builder: (context) => PageThree()),
+                  MaterialPageRoute(builder: (context) => PageFive()),
                 );
               },
               child: const Text(

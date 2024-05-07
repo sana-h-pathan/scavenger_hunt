@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:scavanger_hunt/app_score.dart';
 import 'package:scavanger_hunt/page-four.dart';
@@ -21,10 +22,15 @@ class _PageThreeState extends State<PageThree> {
 
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage(String message) async {
-    await flutterTts.setLanguage("en-US");
+  Future<void> speakMessage(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+    // String message = texts[messageKey];
+    await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
+    await flutterTts.speak(messageKey);
   }
 
   Map<int, String> buttonToHint = {0: "two", 1: "three", 2: "four", 3: "five"};
