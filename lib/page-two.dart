@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:flutter/material.dart';
 import 'package:scavanger_hunt/page-three.dart';
 import 'header.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageTwo extends StatefulWidget {
   @override
@@ -15,13 +17,10 @@ class PageTwo extends StatefulWidget {
 }
 
 class _PageTwoState extends State<PageTwo> {
+  Timer? _timer;
+  int _start = 60;
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage_OLD(String message) async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
-  }
 
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
@@ -46,11 +45,60 @@ class _PageTwoState extends State<PageTwo> {
     setState(() {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      resetTimer();
+      AppScore().setStageScore(2, 0);
+    });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(2, 0);
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -131,6 +179,8 @@ class _PageTwoState extends State<PageTwo> {
                     if (allButtonsClicked()) {
                       speakMessage(
                           "You have found all occurrences of number 4");
+                      print("AppScore");
+                      print(AppScore().currentScore);
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -140,6 +190,18 @@ class _PageTwoState extends State<PageTwo> {
                       }
                     }
                   },
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
                 ),
               ),
               // Buttons positioned based on the device's orientation
@@ -226,6 +288,7 @@ class _PageTwoState extends State<PageTwo> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().setStageScore(2, AppScore().getStageScore(2)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts

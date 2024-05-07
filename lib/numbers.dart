@@ -46,6 +46,7 @@ class NumbersPage extends StatelessWidget {
               ); // Handle home button press here
             },
           ),
+          ScoreWidget(),
           LanguageWidget(),
           // Number buttons and connecting lines
           ..._buildNumberButtons(context),

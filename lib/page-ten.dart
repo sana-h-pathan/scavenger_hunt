@@ -185,6 +185,7 @@ class _PageTenState extends State<PageTen> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );

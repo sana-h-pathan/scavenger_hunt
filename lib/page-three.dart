@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:scavanger_hunt/page-four.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageThree extends StatefulWidget {
   @override
@@ -12,6 +16,9 @@ class PageThree extends StatefulWidget {
 }
 
 class _PageThreeState extends State<PageThree> {
+  Timer? _timer;
+  int _start = 60;
+
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String message) async {
@@ -27,11 +34,59 @@ class _PageThreeState extends State<PageThree> {
     setState(() {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      resetTimer();
+      AppScore().setStageScore(3, 0);
+    });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(3, 0);
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -135,6 +190,18 @@ class _PageThreeState extends State<PageThree> {
                 ),
               ),
               Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
+                ),
+              ),
+              Positioned(
                 top:
                     MediaQuery.of(context).size.height * 0.15, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.05,
@@ -187,6 +254,7 @@ class _PageThreeState extends State<PageThree> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );
@@ -220,6 +288,7 @@ class _PageThreeState extends State<PageThree> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().setStageScore(3, AppScore().getStageScore(3)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   speakMessage("You have found all occurrences of number 3");

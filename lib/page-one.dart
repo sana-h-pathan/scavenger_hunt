@@ -22,11 +22,6 @@ class _PageOneState extends State<PageOne> {
 
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage_OLD(String message) async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
-  }
 
   Future<void> stage_finished() async {
     speakMessage("You have found all occurrences of number 1");
@@ -58,6 +53,7 @@ class _PageOneState extends State<PageOne> {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
       resetTimer();
+      AppScore().setStageScore(1, 0);
     });
   }
 
@@ -90,6 +86,11 @@ class _PageOneState extends State<PageOne> {
   void initState() {
     super.initState();
     startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(1, 0);
+      });
+    });
   }
 
   @override
@@ -104,7 +105,6 @@ class _PageOneState extends State<PageOne> {
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -140,7 +140,6 @@ class _PageOneState extends State<PageOne> {
                   ),
                 ),
               ),
-
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
@@ -295,11 +294,13 @@ class _PageOneState extends State<PageOne> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
-                AppScore().currentScore += 100;
+                AppScore().setStageScore(1, AppScore().getStageScore(1)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts.speak(
                       "Congratulations!! You have found all occurrences of number 1");
+                  print("AppScore");
+                  print(AppScore().currentScore);
                 }
               });
             }

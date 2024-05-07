@@ -293,7 +293,7 @@ class ScoreWidget extends StatefulWidget {
 
 class _ScoreWidgetState extends State<ScoreWidget> {
   // Initial score set to 0
-  int currentScore = 0;
+  int currentScore = AppScore().currentScore;
 
   @override
   void initState() {
@@ -305,7 +305,7 @@ class _ScoreWidgetState extends State<ScoreWidget> {
   void dispose() {
     AppScore().removeListener(updateLocalScore); // Remove listener
     super.dispose();
-    AppScore().currentScore = 0;
+    AppScore().resetStageScore();
   }
 
   void updateLocalScore() {

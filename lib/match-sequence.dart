@@ -51,6 +51,7 @@ class NumberSequenceQuiz extends StatelessWidget {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget(),
             ],
           );

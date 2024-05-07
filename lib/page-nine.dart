@@ -185,6 +185,7 @@ class _PageNineState extends State<PageNine> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );

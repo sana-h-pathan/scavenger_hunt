@@ -47,7 +47,6 @@ class HomeScreen extends StatelessWidget {
               ); // Handle home button press here
             },
           ),
-          ScoreWidget(),
           LanguageWidget(),
           Positioned(
             top: 300, // Adjust top position as needed

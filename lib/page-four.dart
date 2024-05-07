@@ -192,6 +192,7 @@ class _PageFourState extends State<PageFour> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );

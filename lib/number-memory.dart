@@ -52,6 +52,7 @@ class NumberMemoryGame extends StatelessWidget {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget(),
             ],
           );

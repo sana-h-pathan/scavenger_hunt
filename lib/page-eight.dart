@@ -185,6 +185,7 @@ class _PageEightState extends State<PageEight> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );
