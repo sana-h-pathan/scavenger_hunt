@@ -1,10 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:scavanger_hunt/page-ten.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'header.dart';
 import 'background.dart';
 import 'home.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageNine extends StatefulWidget {
   @override
@@ -12,6 +17,9 @@ class PageNine extends StatefulWidget {
 }
 
 class _PageNineState extends State<PageNine> {
+  Timer? _timer;
+  int _start = 60;
+
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String message) async {
@@ -32,11 +40,60 @@ class _PageNineState extends State<PageNine> {
     setState(() {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      resetTimer();
+      AppScore().setStageScore(9, 0);
+    });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        AppScore().setStageScore(9, 0);
+      });
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -135,6 +192,18 @@ class _PageNineState extends State<PageNine> {
                   },
                 ),
               ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
+                ),
+              ),
               // Buttons positioned based on the device's orientation
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.11,
@@ -219,6 +288,7 @@ class _PageNineState extends State<PageNine> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().setStageScore(9, AppScore().getStageScore(9)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts.speak(
