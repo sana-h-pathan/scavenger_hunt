@@ -192,6 +192,7 @@ class _PageTwoState extends State<PageTwo> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );

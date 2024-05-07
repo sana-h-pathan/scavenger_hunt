@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'dart:math' as math;
 import 'package:scavanger_hunt/numbers.dart'
     as Numbers; // Rename the import using 'as'
@@ -278,6 +279,55 @@ class _LanguageWidgetState extends State<LanguageWidget> {
           );
         }).toList(),
         onChanged: _changeLanguage,
+      ),
+    );
+  }
+}
+
+class ScoreWidget extends StatefulWidget {
+  const ScoreWidget({Key? key}) : super(key: key);
+
+  @override
+  _ScoreWidgetState createState() => _ScoreWidgetState();
+}
+
+class _ScoreWidgetState extends State<ScoreWidget> {
+  // Initial score set to 0
+  int currentScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    AppScore().addListener(updateLocalScore); // Add listener
+  }
+
+  @override
+  void dispose() {
+    AppScore().removeListener(updateLocalScore); // Remove listener
+    super.dispose();
+    AppScore().currentScore = 0;
+  }
+
+  void updateLocalScore() {
+    // Force a rebuild whenever the score changes
+    setState(() {
+      currentScore = AppScore().currentScore;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.031,
+      right: MediaQuery.of(context).size.width * 0.28,
+      child: Row(
+        children: [
+          Text(
+            'Score: $currentScore',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ],
       ),
     );
   }

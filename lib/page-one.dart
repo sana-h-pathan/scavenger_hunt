@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:scavanger_hunt/page-two.dart';
 import 'header.dart';
 import 'background.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:scavanger_hunt/numbers.dart' as Numbers;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:scavanger_hunt/app_language.dart';
+import 'dart:async';
 
 class PageOne extends StatefulWidget {
   @override
@@ -15,12 +17,21 @@ class PageOne extends StatefulWidget {
 }
 
 class _PageOneState extends State<PageOne> {
+  Timer? _timer;
+  int _start = 60;
+
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage_OLD(String message) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
+  }
+
+  Future<void> stage_finished() async {
+    speakMessage("You have found all occurrences of number 1");
+    print("AppScore");
+    print(AppScore().currentScore);
   }
 
   Future<void> speakMessage(String messageKey) async {
@@ -46,11 +57,54 @@ class _PageOneState extends State<PageOne> {
     setState(() {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
+      resetTimer();
     });
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    _start = 60;
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            print("Timer Completed"); // Debug when timer reaches 0
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    String formattedTime =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -133,8 +187,7 @@ class _PageOneState extends State<PageOne> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage(
-                          "You have found all occurrences of number 1");
+                      stage_finished();
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
@@ -144,6 +197,18 @@ class _PageOneState extends State<PageOne> {
                       }
                     }
                   },
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.08,
+                child: Text(
+                  '$formattedTime',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                    color: Colors.yellow,
+                  ),
                 ),
               ),
               // Buttons positioned based on the device's orientation
@@ -196,6 +261,7 @@ class _PageOneState extends State<PageOne> {
                   );
                 },
               ),
+              ScoreWidget(),
               LanguageWidget()
             ],
           );
@@ -229,6 +295,7 @@ class _PageOneState extends State<PageOne> {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
+                AppScore().currentScore += 100;
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts.speak(
