@@ -187,10 +187,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: const Color.fromRGBO(252, 170, 214, 1),
-                      minimumSize: const Size(
-                          300, 100), // Set minimum width and height for button
+
+                      foregroundColor: Colors.black, backgroundColor: const Color.fromRGBO(252, 170, 214, 1),
+                      minimumSize: const Size(300, 100), // Set minimum width and height for button
+
                     ),
                     icon: const Icon(Icons.home,
                         size: 40), // Add icon to the button
