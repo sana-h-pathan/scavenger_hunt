@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_tts/flutter_tts.dart'; // Import flutter_tts
 import 'background.dart';
 import 'header.dart';
 import 'home.dart';
-import 'dart:async';
 
 class NumberMemoryGame extends StatelessWidget {
   @override
@@ -25,7 +27,7 @@ class NumberMemoryGame extends StatelessWidget {
                 ],
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.10,
+                top: MediaQuery.of(context).size.height * 0.05,
                 left: MediaQuery.of(context).size.width * 0.25,
                 child: const Text(
                   'Find the Match',
@@ -70,36 +72,59 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
   late List<bool> cardVisible;
   List<int> flippedIndices = [];
   bool isProcessing = false;
+  Timer? timer;
+  int timeLeft = 60;
+  bool isBlinking = false;
+  
+  final player = AudioCache();
 
   @override
   void initState() {
     super.initState();
     initializeGame();
+    startTimer();
   }
 
   void initializeGame() {
-  setState(() {
-    var random = Random();
-    Set<int> uniqueNumbers = Set();
+    setState(() {
+      var random = Random();
+      Set<int> uniqueNumbers = Set();
 
-    while (uniqueNumbers.length < 6) {
-      int randomNumber = random.nextInt(10) + 1;
-      uniqueNumbers.add(randomNumber);
-    }
+      while (uniqueNumbers.length < 6) {
+        int randomNumber = random.nextInt(10) + 1;
+        uniqueNumbers.add(randomNumber);
+      }
 
-    numbers = [];
-    uniqueNumbers.forEach((number) {
-      numbers.add(number);
-      numbers.add(number);
+      numbers = [];
+      uniqueNumbers.forEach((number) {
+        numbers.add(number);
+        numbers.add(number);
+      });
+
+      numbers.shuffle();
+      cardVisible = List.filled(numbers.length, false);
+      flippedIndices.clear();
+      isProcessing = false;
     });
+  }
 
-    numbers.shuffle();
-    cardVisible = List.filled(numbers.length, false);
-    flippedIndices.clear();
-    isProcessing = false;
-  });
-}
+  final FlutterTts flutterTts = FlutterTts();
 
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() {
+        timeLeft--;
+        if (timeLeft == 0) {
+          // Handle when time runs out
+          timer?.cancel(); // Stop the timer
+        } else if (timeLeft <= 5) {
+          // Start blinking when time is less than or equal to 5 seconds
+          isBlinking = !isBlinking;
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,56 +135,79 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     double boxWidth = (screenWidth - 50) / 4; // Adjust 50 according to your padding requirements
     double boxHeight = (screenHeight * 0.6) / 3; // Assuming you want 3 rows and 60% of screen height for cards
 
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-        childAspectRatio: boxWidth / boxHeight, // Set aspect ratio based on calculated width and height
-      ),
-      itemCount: numbers.length,
-      itemBuilder: (context, index) {
-        return InkWell(
-          onTap: () {
-            if (!isProcessing && !flippedIndices.contains(index) && !cardVisible[index]) {
-              setState(() {
-                cardVisible[index] = true;
-                flippedIndices.add(index);
-              });
-              if (flippedIndices.length == 2) {
-                checkMatch();
-              }
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0), // Add padding to each box
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: cardVisible[index]
-                      ? [const Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), const Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
-                      : [Colors.pink.withOpacity(0.8), Colors.blue.withOpacity(0.6)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              width: boxWidth,
-              height: boxHeight,
-              child: Center(
-                child: Text(
-                  cardVisible[index] ? '${_getDisplayContent(index)}' : '',
-                  style: const TextStyle(
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+              childAspectRatio: boxWidth / boxHeight, // Set aspect ratio based on calculated width and height
+            ),
+            itemCount: numbers.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  if (!isProcessing && !flippedIndices.contains(index) && !cardVisible[index]) {
+                    setState(() {
+                      cardVisible[index] = true;
+                      flippedIndices.add(index);
+                    });
+                    if (flippedIndices.length == 2) {
+                      checkMatch();
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0), // Add padding to each box
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: cardVisible[index]
+                            ? [const Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), const Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
+                            : [Colors.pink.withOpacity(0.8), Colors.blue.withOpacity(0.6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    width: boxWidth,
+                    height: boxHeight,
+                    child: Center(
+                      child: Text(
+                        cardVisible[index] ? '${_getDisplayContent(index)}' : '',
+                        style: const TextStyle(
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
+              );
+            },
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          width: 120,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Center(
+            child: Text(
+              '$timeLeft sec',
+              style: TextStyle(
+                fontSize: 24,
+                color: timeLeft <= 5 && isBlinking ? Colors.red : Colors.black,
               ),
             ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 
@@ -225,6 +273,16 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
   }
 
   void _showCongratulationDialog() {
+    // Stop the timer
+    timer?.cancel();
+
+    // Play clapping sound
+    player.play('clapping_sound.mp3');
+    
+    // Speak congratulatory message
+    flutterTts.speak('Congratulations! You tapped all numbers in the correct sequence!');
+
+    // Show congratulatory dialog
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -249,7 +307,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               Navigator.pop(context); // Close dialog
             },
             child: const Text('OK',
-            style: TextStyle(
+              style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
               ),
@@ -259,9 +317,11 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
             onPressed: () {
               Navigator.pop(context); // Close dialog
               initializeGame(); // Reset the game
+              timeLeft = timeLeft; // Reset the timer to 60 seconds
+              startTimer(); // Start the timer again
             },
             child: const Text('Replay',
-            style: TextStyle(
+              style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
               ),
@@ -284,5 +344,16 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 }
 
+void main() {
+  runApp(MaterialApp(
+    home: NumberMemoryGame(),
+  ));
+}

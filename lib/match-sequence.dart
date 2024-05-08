@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_tts/flutter_tts.dart'; // Import flutter_tts
 import 'background.dart';
 import 'header.dart';
 import 'home.dart';
 import 'dart:async';
 
-class NumberSequenceQuiz extends StatelessWidget {
+class NumberSequenceQuiz extends StatefulWidget {
+  @override
+  _NumberSequenceQuizState createState() => _NumberSequenceQuizState();
+}
+
+class _NumberSequenceQuizState extends State<NumberSequenceQuiz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +46,7 @@ class NumberSequenceQuiz extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
                 },
               ),
@@ -69,52 +76,120 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
   int currentIndex = 0;
   bool completed = false; // Track if the sequence is completed
 
+  // Initialize AudioCache
+  final player = AudioCache();
+
+  // Initialize FlutterTts
+  final FlutterTts flutterTts = FlutterTts();
+
+  Timer? timer;
+  int timeLeft = 30;
+  bool isBlinking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() {
+        timeLeft--;
+        if (timeLeft == 0) {
+          // Restart the game if time runs out
+          restartGame();
+        } else if (timeLeft <= 5) {
+          // Start blinking when time is less than or equal to 5 seconds
+          isBlinking = !isBlinking;
+        }
+      });
+    });
+  }
+
+  void restartGame() {
+    setState(() {
+      currentIndex = 0;
+      completed = false;
+      timeLeft = 30; // Reset the timer
+      isBlinking = false; // Stop blinking
+      numbers = List.generate(10, (index) => index + 1)..shuffle(); // Shuffle numbers
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Define a list of text representations of numbers
+    List<String> numberTexts = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             'Tap the numbers in sequence',
             style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 60.0),
+          const SizedBox(height: 60.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 0; i < 4; i++)
-                    _buildNumberContainer(i),
+                  for (int i = 0; i < 4; i++) _buildNumberContainer(i, numberTexts),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 4; i < 8; i++)
-                    _buildNumberContainer(i),
+                  for (int i = 4; i < 8; i++) _buildNumberContainer(i, numberTexts),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 8; i < numbers.length; i++)
-                    _buildNumberContainer(i),
+                  for (int i = 8; i < numbers.length; i++) _buildNumberContainer(i, numberTexts),
                 ],
               ),
             ],
+          ),
+          const SizedBox(height: 40),
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            width: 120.0, // Adjust width here
+            height: 120.0, // Adjust height here
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0), // Adjust border radius if needed
+            ),
+            child: Center(
+              child: Text(
+                '$timeLeft sec',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: timeLeft <= 5 && isBlinking ? Colors.red : Colors.black, // Blinking color
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNumberContainer(int index) {
+  Widget _buildNumberContainer(int index, List<String> numberTexts) {
+    bool showText = index.isEven; // Alternate between showing text and digit
+
     return GestureDetector(
       onTap: () {
-        if (!completed) { // Check if sequence is completed
+        if (!completed) {
           if (numbers[index] == currentIndex + 1) {
             setState(() {
               currentIndex++;
@@ -132,36 +207,49 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
         width: 150.0,
         height: 150.0,
         alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         decoration: BoxDecoration(
           color: numbers[index] <= currentIndex ? Colors.green : Colors.red,
           borderRadius: BorderRadius.circular(30.0),
         ),
-        child: Text(
-          '${numbers[index]}',
-          style: TextStyle(fontSize: 40.0, color: Colors.black),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (showText)
+              Text(
+                '${numberTexts[numbers[index] - 1]}', // Show text representation
+                style: const TextStyle(fontSize: 30.0, color: Colors.black),
+              )
+            else
+              Text(
+                '${numbers[index]}', // Show digit representation
+                style: const TextStyle(fontSize: 40.0, color: Colors.black),
+              ),
+          ],
         ),
       ),
     );
   }
 
   void _showErrorDialog() {
+    flutterTts.speak('Oh, you selected the wrong number. Please try again.');
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: Colors.grey[900], // Change background color
-        title: Text(
-          'Incorrect Sequence!',
+        backgroundColor: Colors.grey[900],
+        title: const Text(
+          'Oh, you selected the wrong number!',
           style: TextStyle(
-            color: Colors.red, // Change text color
-            fontSize: 30.0, // Increase font size
+            color: Colors.red,
+            fontSize: 30.0,
           ),
         ),
-        content: Text(
-          'You tapped the numbers in the wrong order.',
+        content: const Text(
+          'Please try again.',
           style: TextStyle(
-            color: Colors.white, // Change text color
-            fontSize: 24.0, // Increase font size
+            color: Colors.white,
+            fontSize: 24.0,
           ),
         ),
         actions: [
@@ -169,16 +257,18 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
             onPressed: () {
               setState(() {
                 currentIndex = 0;
-                completed = false; // Reset sequence completion
-                numbers.shuffle(); // Shuffle numbers again
+                completed = false;
+                timeLeft = 30; // Reset the timer
+                isBlinking = false; // Stop blinking
               });
+              restartGame(); // Shuffle numbers
               Navigator.pop(context);
             },
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
-                color: Colors.white, // Change text color
-                fontSize: 18.0, // Increase font size
+                color: Colors.white,
+                fontSize: 18.0,
               ),
             ),
           ),
@@ -188,52 +278,51 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
   }
 
   void _showCongratulationDialog() {
+    player.play('clapping_sound.mp3');
+    flutterTts.speak('Congratulations!! You are awesome!!');
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: Colors.grey[900], // Change background color
-        title: Text(
+        backgroundColor: Colors.grey[900],
+        title: const Text(
           'Congratulations!',
           style: TextStyle(
-            color: Colors.green, // Change text color
-            fontSize: 30.0, // Increase font size
+            color: Colors.green,
+            fontSize: 30.0,
           ),
         ),
-        content: Text(
-          'You tapped all numbers in the correct sequence!',
+        content: const Text(
+          'You are awesome!',
           style: TextStyle(
-            color: Colors.white, // Change text color
-            fontSize: 24.0, // Increase font size
+            color: Colors.white,
+            fontSize: 24.0,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pop(context); // Go back to the home screen
+              Navigator.pop(context);
             },
-            child: Text(
+            child: const Text(
               'Home',
               style: TextStyle(
-                color: Colors.white, // Change text color
-                fontSize: 18.0, // Increase font size
+                color: Colors.white,
+                fontSize: 18.0,
               ),
             ),
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                currentIndex = 0;
-                completed = false; // Reset sequence completion
-                numbers.shuffle(); // Shuffle numbers again
-              });
+              restartGame(); // Shuffle numbers
               Navigator.pop(context);
             },
-            child: Text(
+            child: const Text(
               'Replay',
               style: TextStyle(
-                color: Colors.white, // Change text color
-                fontSize: 18.0, // Increase font size
+                color: Colors.white,
+                fontSize: 18.0,
               ),
             ),
           ),
@@ -242,4 +331,3 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
     );
   }
 }
-
