@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:scavanger_hunt/home.dart';
 import 'dart:math' as math;
 import 'package:scavanger_hunt/numbers.dart'
