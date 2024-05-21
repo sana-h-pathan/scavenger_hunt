@@ -16,12 +16,15 @@ class PageOne extends StatefulWidget {
   _PageOneState createState() => _PageOneState();
 }
 
-class _PageOneState extends State<PageOne> {
+class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
   Timer? _timer;
   int _start = 60;
 
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  bool _isAnimationVisible = true;
 
   Future<void> stage_finished() async {
     speakMessage("You have found all occurrences of number 1");
@@ -41,7 +44,7 @@ class _PageOneState extends State<PageOne> {
   }
 
   Map<int, String> buttonToHint = {
-    0: "Reach me through ladded",
+    0: "Reach me through ladder",
     1: "I am hanging in water",
     2: "I am on arms",
     3: "Below the stone"
@@ -70,8 +73,10 @@ class _PageOneState extends State<PageOne> {
       (Timer timer) {
         if (_start == 0) {
           setState(() {
-            print("Timer Completed"); // Debug when timer reaches 0
+            count = 0; // Reset the counter
+            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
             timer.cancel();
+            resetTimer(); // Restart the timer
           });
         } else {
           setState(() {
@@ -85,17 +90,35 @@ class _PageOneState extends State<PageOne> {
   @override
   void initState() {
     super.initState();
-    startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         AppScore().setStageScore(1, 0);
       });
+    });
+
+    // Initialize the animation controller and animation
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, -1.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation and play the sound
+    _controller.forward().then((_) {
+      speakMessage("page_one_message");
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -261,7 +284,36 @@ class _PageOneState extends State<PageOne> {
                 },
               ),
               ScoreWidget(),
-              LanguageWidget()
+              LanguageWidget(),
+              // Animation Overlay
+              if (_isAnimationVisible)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SlideTransition(
+                          position: _offsetAnimation,
+                          child: Image.asset(
+                            'assets/one.png',
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _isAnimationVisible = false;
+                            });
+                            startTimer(); // Start the timer when OK is pressed
+                          },
+                          child: Text("OK"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           );
         },
@@ -316,11 +368,23 @@ class _PageOneState extends State<PageOne> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.blueGrey, // Change background color
-          title: const Text(
-            'Congratulations!',
-            style: TextStyle(
-                color: Colors.yellow,
-                fontSize: 30), // Change text color and size
+          title: Column(
+            children: [
+              const Text(
+                'Congratulations!',
+                style: TextStyle(
+                  color: Colors.yellow,
+                  fontSize: 30,
+                ),
+              ),
+              Text(
+                'Your Score: ${AppScore().currentScore}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ],
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -345,8 +409,9 @@ class _PageOneState extends State<PageOne> {
               child: const Text(
                 'Next Level',
                 style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18), // Change button text color and size
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
               ),
             ),
           ],
