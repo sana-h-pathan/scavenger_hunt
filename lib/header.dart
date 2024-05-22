@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/app_score.dart';
 import 'package:scavanger_hunt/home.dart';
 import 'dart:math' as math;
 import 'package:scavanger_hunt/numbers.dart'
@@ -204,12 +205,11 @@ class HomeWidget extends StatelessWidget {
         ),
         iconSize: 36,
         onPressed: () {
-
-                  Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );// Handle home button press here
-            },
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          ); // Handle home button press here
+        },
       ),
     );
   }

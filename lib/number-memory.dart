@@ -77,7 +77,7 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
   Timer? timer;
   int timeLeft = 60;
   bool isBlinking = false;
-  
+
   final player = AudioCache();
 
   @override
@@ -111,13 +111,6 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
 
   final FlutterTts flutterTts = FlutterTts();
 
-      numbers.shuffle();
-      cardVisible = List.filled(numbers.length, false);
-      flippedIndices.clear();
-      isProcessing = false;
-    });
-  }
-
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() {
@@ -144,7 +137,6 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     double boxHeight = (screenHeight * 0.6) /
         3; // Assuming you want 3 rows and 60% of screen height for cards
 
-
     return Column(
       children: [
         Expanded(
@@ -153,13 +145,16 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               crossAxisCount: 4,
               crossAxisSpacing: 10.0,
               mainAxisSpacing: 10.0,
-              childAspectRatio: boxWidth / boxHeight, // Set aspect ratio based on calculated width and height
+              childAspectRatio: boxWidth /
+                  boxHeight, // Set aspect ratio based on calculated width and height
             ),
             itemCount: numbers.length,
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  if (!isProcessing && !flippedIndices.contains(index) && !cardVisible[index]) {
+                  if (!isProcessing &&
+                      !flippedIndices.contains(index) &&
+                      !cardVisible[index]) {
                     setState(() {
                       cardVisible[index] = true;
                       flippedIndices.add(index);
@@ -175,8 +170,16 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: cardVisible[index]
-                            ? [const Color.fromARGB(255, 159, 18, 18).withOpacity(0.8), const Color.fromARGB(255, 186, 204, 29).withOpacity(0.6)]
-                            : [Colors.pink.withOpacity(0.8), Colors.blue.withOpacity(0.6)],
+                            ? [
+                                const Color.fromARGB(255, 159, 18, 18)
+                                    .withOpacity(0.8),
+                                const Color.fromARGB(255, 186, 204, 29)
+                                    .withOpacity(0.6)
+                              ]
+                            : [
+                                Colors.pink.withOpacity(0.8),
+                                Colors.blue.withOpacity(0.6)
+                              ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -186,7 +189,9 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
                     height: boxHeight,
                     child: Center(
                       child: Text(
-                        cardVisible[index] ? '${_getDisplayContent(index)}' : '',
+                        cardVisible[index]
+                            ? '${_getDisplayContent(index)}'
+                            : '',
                         style: const TextStyle(
                           fontSize: 40.0,
                           fontWeight: FontWeight.bold,
@@ -288,9 +293,10 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
 
     // Play clapping sound
     player.play('clapping_sound.mp3');
-    
+
     // Speak congratulatory message
-    flutterTts.speak('Congratulations! You tapped all numbers in the correct sequence!');
+    flutterTts.speak(
+        'Congratulations! You tapped all numbers in the correct sequence!');
 
     // Show congratulatory dialog
     showDialog(
@@ -316,8 +322,8 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
             onPressed: () {
               Navigator.pop(context); // Close dialog
             },
-
-            child: const Text('OK',
+            child: const Text(
+              'OK',
               style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
@@ -331,8 +337,8 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
               timeLeft = timeLeft; // Reset the timer to 60 seconds
               startTimer(); // Start the timer again
             },
-
-            child: const Text('Replay',
+            child: const Text(
+              'Replay',
               style: TextStyle(
                 color: Colors.white, // Change text color
                 fontSize: 18.0, // Increase font size
@@ -363,7 +369,6 @@ class _NumberMemoryGameScreenState extends State<NumberMemoryGameScreen> {
     super.dispose();
   }
 }
-
 
 void main() {
   runApp(MaterialApp(
