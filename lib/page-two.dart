@@ -17,7 +17,6 @@ class PageTwo extends StatefulWidget {
 }
 
 class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
-
   Timer? _timer;
   int _start = 60;
   int count = 0;
@@ -27,10 +26,11 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
   bool _isAnimationVisible = true;
 
   Future<void> stage_finished() async {
-    speakMessage("You have found all occurrences of number 1");
+    speakMessage("You have found all occurrences of number 2");
     print("AppScore");
     print(AppScore().currentScore);
   }
+
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
     String data =
@@ -73,7 +73,12 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
         if (_start == 0) {
           setState(() {
             count = 0; // Reset the counter
-            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
+            buttonClicked = {
+              0: false,
+              1: false,
+              2: false,
+              3: false
+            }; // Reset the buttons
             timer.cancel();
             resetTimer(); // Restart the timer
           });
@@ -91,7 +96,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        AppScore().setStageScore(1, 0);
+        AppScore().setStageScore(2, 0);
       });
     });
 
@@ -351,11 +356,11 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
-                AppScore().setStageScore(1, AppScore().getStageScore(1)! + 100);
+                AppScore().setStageScore(2, AppScore().getStageScore(2)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts.speak(
-                      "Congratulations!! You have found all occurrences of number 1");
+                      "Congratulations!! You have found all occurrences of number 2");
                   print("AppScore");
                   print(AppScore().currentScore);
                 }
