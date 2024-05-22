@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class AppScore with ChangeNotifier {
   static final AppScore _singleton = AppScore._internal();
@@ -31,6 +33,7 @@ class AppScore with ChangeNotifier {
       StageScores[key] = 0;
     });
     _currentScore = 0;
+    _saveScoresToFile();
   }
 
   void setStageScore(int stage, int score) {
@@ -48,6 +51,25 @@ class AppScore with ChangeNotifier {
       print('Stage $key: Score $value');
     });
 
+    _saveScoresToFile();
     notifyListeners(); // Notify listeners about changes
+  }
+
+  Future<String> _getFilePath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path + '../assets/scores.json';
+  }
+
+  Future<void> _saveScoresToFile() async {
+    final filePath = await _getFilePath();
+    final file = File(filePath);
+
+    final scoresData = {
+      'playerId': 1,
+      'currentScore': _currentScore,
+      'StageScores': StageScores,
+    };
+
+    await file.writeAsString(scoresData.toString());
   }
 }
