@@ -42,11 +42,17 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
     await flutterTts.speak(message);
   }
 
+  Future<void> speakHint(String message) async {
+      await flutterTts.setLanguage("en-US");
+      await flutterTts.setPitch(1.0);
+      await flutterTts.speak(message);
+    }
+
   Map<int, String> buttonToHint = {
-    0: "I am on fish",
-    1: "Look inside the castle",
-    2: "Sorrounded by fishes",
-    3: "I am on reeves"
+    0: "I am on golden fish",
+    1: "I am on blue fish",
+    2: "On top of shell",
+    3: "I am just above reeves"
   };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
@@ -214,7 +220,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await speakMessage(buttonToHint[i]!);
+                        await speakHint(buttonToHint[i]!);
                         break;
                       }
                     }

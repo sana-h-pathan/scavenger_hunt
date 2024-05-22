@@ -11,29 +11,49 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:scavanger_hunt/app_language.dart';
 import 'dart:async';
 
-class PageThree extends StatefulWidget {
+class PageThree extends StatefulWidget  {
   @override
   _PageThreeState createState() => _PageThreeState();
 }
 
-class _PageThreeState extends State<PageThree> {
+class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMixin {
   Timer? _timer;
   int _start = 60;
 
   int count = 0;
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  bool _isAnimationVisible = true;
+
+  Future<void> stage_finished() async {
+    speakMessage("You have found all occurrences of number 3");
+    print("AppScore");
+    print(AppScore().currentScore);
+  }
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
     String data =
         await rootBundle.loadString('assets/texts/$languageCode.json');
     Map<String, dynamic> texts = json.decode(data);
-    // String message = texts[messageKey];
+    String message = texts[messageKey];
     await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(messageKey);
+    await flutterTts.speak(message);
   }
 
-  Map<int, String> buttonToHint = {0: "two", 1: "three", 2: "four", 3: "five"};
+  Future<void> speakHint(String message) async {
+      await flutterTts.setLanguage("en-US");
+      await flutterTts.setPitch(1.0);
+      await flutterTts.speak(message);
+    }
+
+  Map<int, String> buttonToHint = {
+    0: "Reach me through ladder",
+    1: "I am hanging in water",
+    2: "I am on arms",
+    3: "Below the stone"
+  };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
   void resetCountAndButtons() {
@@ -58,8 +78,10 @@ class _PageThreeState extends State<PageThree> {
       (Timer timer) {
         if (_start == 0) {
           setState(() {
-            print("Timer Completed"); // Debug when timer reaches 0
+            count = 0; // Reset the counter
+            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
             timer.cancel();
+            resetTimer(); // Restart the timer
           });
         } else {
           setState(() {
@@ -73,17 +95,34 @@ class _PageThreeState extends State<PageThree> {
   @override
   void initState() {
     super.initState();
-    startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         AppScore().setStageScore(3, 0);
       });
+    });
+    // Initialize the animation controller and animation
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0.0, -1.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation and play the sound
+    _controller.forward().then((_) {
+      speakMessage("page_three_message");
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -160,14 +199,7 @@ class _PageThreeState extends State<PageThree> {
                   ),
                   color: Colors.yellow,
                   onPressed: () async {
-                    await flutterTts.setLanguage("en-US");
-                    await flutterTts.setPitch(1.0);
-                    await flutterTts
-                        .speak("Please find all occurrences of number 3");
-                    await Future.delayed(const Duration(seconds: 5));
-                    await flutterTts.setLanguage("es-ES");
-                    await flutterTts.speak(
-                        "Por favor, encuentra todas las ocurrencias del número uno");
+                    speakMessage("page_three_message");
                   },
                 ),
               ),
@@ -182,13 +214,12 @@ class _PageThreeState extends State<PageThree> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage(
-                          "You have found all occurrences of number 4");
+                      stage_finished();
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await speakMessage(buttonToHint[i]!);
+                        await speakHint(buttonToHint[i]!);
                         break;
                       }
                     }
@@ -200,7 +231,7 @@ class _PageThreeState extends State<PageThree> {
                 right: MediaQuery.of(context).size.width * 0.08,
                 child: Text(
                   '$formattedTime',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 36,
                     color: Colors.yellow,
@@ -237,7 +268,7 @@ class _PageThreeState extends State<PageThree> {
                 child: const Text(
                   'Find 3',
                   style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.black,
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
@@ -260,8 +291,42 @@ class _PageThreeState extends State<PageThree> {
                   );
                 },
               ),
-              ScoreWidget(),
-              LanguageWidget()
+              const ScoreWidget(),
+              const LanguageWidget(),
+              // Animation Overlay
+              if (_isAnimationVisible)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipOval(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: MediaQuery.of(context).size.width * 0.5,
+                            child: SlideTransition(
+                              position: _offsetAnimation,
+                              child: Image.asset(
+                                'assets/three.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _isAnimationVisible = false;
+                            });
+                            startTimer(); // Start the timer when OK is pressed
+                          },
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           );
         },
@@ -297,7 +362,8 @@ class _PageThreeState extends State<PageThree> {
                 AppScore().setStageScore(3, AppScore().getStageScore(3)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
-                  speakMessage("You have found all occurrences of number 3");
+                  flutterTts.speak(
+                      "Congratulations!! You have found all occurrences of number three");
                 }
               });
             }
@@ -313,11 +379,23 @@ class _PageThreeState extends State<PageThree> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.blueGrey, // Change background color
-          title: const Text(
-            'Congratulations!',
-            style: TextStyle(
-                color: Colors.yellow,
-                fontSize: 30), // Change text color and size
+          title: Column(
+            children: [
+              const Text(
+                'Congratulations!',
+                style: TextStyle(
+                  color: Colors.yellow,
+                  fontSize: 30,
+                ),
+              ),
+              Text(
+                'Your Score: ${AppScore().currentScore}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ],
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -342,8 +420,9 @@ class _PageThreeState extends State<PageThree> {
               child: const Text(
                 'Next Level',
                 style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18), // Change button text color and size
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
               ),
             ),
           ],

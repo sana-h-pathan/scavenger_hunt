@@ -43,6 +43,11 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
     await flutterTts.speak(message);
   }
 
+  Future<void> speakHint(String message) async {
+      await flutterTts.setLanguage("en-US");
+      await flutterTts.setPitch(1.0);
+      await flutterTts.speak(message);
+    }
   Map<int, String> buttonToHint = {
     0: "Reach me through ladder",
     1: "I am hanging in water",
@@ -214,7 +219,7 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await speakMessage(buttonToHint[i]!);
+                        await speakHint(buttonToHint[i]!);
                         break;
                       }
                     }
@@ -293,12 +298,17 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SlideTransition(
-                          position: _offsetAnimation,
-                          child: Image.asset(
-                            'assets/one.png',
+                        ClipOval(
+                          child: Container(
                             width: MediaQuery.of(context).size.width * 0.5,
-                            height: MediaQuery.of(context).size.height * 0.5,
+                            height: MediaQuery.of(context).size.width * 0.5,
+                            child: SlideTransition(
+                              position: _offsetAnimation,
+                              child: Image.asset(
+                                'assets/one.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
                         ElevatedButton(
@@ -419,4 +429,5 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
       },
     );
   }
+
 }
