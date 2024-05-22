@@ -62,6 +62,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
       resetTimer();
       AppScore().setStageScore(2, 0);
+      AppScore().resetStageScore();
     });
   }
 

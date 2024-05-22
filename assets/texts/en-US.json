@@ -1,5 +1,9 @@
 {
 	"page_one_message": "Please find all occurrences of number one.",
 	"page_two_message": "Please find all occurrences of number two.",
-	"page_three_message": "Please find all occurrences of number three."
+	"page_three_message": "Please find all occurrences of number three.",
+	"page_four_message": "Please find all occurrences of number four.",
+	"page_eight_message": "Please find all occurrences of number eight.",
+	"page_nine_message": "Please find all occurrences of number nine.",
+	"page_ten_message": "Please find all occurrences of number ten."
   }

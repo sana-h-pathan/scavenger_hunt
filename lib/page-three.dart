@@ -62,6 +62,7 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
       resetTimer();
       AppScore().setStageScore(3, 0);
+      AppScore().resetStageScore();
     });
   }
 
@@ -159,13 +160,16 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.25,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.refresh,
-                    size: 60,
+                child: Tooltip(
+                  message: 'Reset', // Tooltip message
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 60,
+                    ),
+                    color: Colors.yellow,
+                    onPressed: resetCountAndButtons,
                   ),
-                  color: Colors.yellow,
-                  onPressed: resetCountAndButtons,
                 ),
               ),
               Positioned(
