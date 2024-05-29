@@ -11,12 +11,13 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:scavanger_hunt/app_language.dart';
 import 'dart:async';
 
-class PageThree extends StatefulWidget  {
+class PageThree extends StatefulWidget {
   @override
   _PageThreeState createState() => _PageThreeState();
 }
 
-class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMixin {
+class _PageThreeState extends State<PageThree>
+    with SingleTickerProviderStateMixin {
   Timer? _timer;
   int _start = 60;
 
@@ -30,6 +31,7 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
     print("AppScore");
     print(AppScore().currentScore);
   }
+
   FlutterTts flutterTts = FlutterTts();
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
@@ -43,10 +45,10 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
   }
 
   Future<void> speakHint(String message) async {
-      await flutterTts.setLanguage("en-US");
-      await flutterTts.setPitch(1.0);
-      await flutterTts.speak(message);
-    }
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
 
   Map<int, String> buttonToHint = {
     0: "Reach me through ladder",
@@ -80,7 +82,12 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
         if (_start == 0) {
           setState(() {
             count = 0; // Reset the counter
-            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
+            buttonClicked = {
+              0: false,
+              1: false,
+              2: false,
+              3: false
+            }; // Reset the buttons
             timer.cancel();
             resetTimer(); // Restart the timer
           });
@@ -133,6 +140,8 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    int scoreToDisplay = AppScore().currentScore;
+
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -156,6 +165,18 @@ class _PageThreeState extends State<PageThree> with SingleTickerProviderStateMix
                       height: MediaQuery.of(context).size.height *
                           0.11), // 10% bottom padding
                 ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,

@@ -44,10 +44,11 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
   }
 
   Future<void> speakHint(String message) async {
-      await flutterTts.setLanguage("en-US");
-      await flutterTts.setPitch(1.0);
-      await flutterTts.speak(message);
-    }
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+
   Map<int, String> buttonToHint = {
     0: "Reach me through ladder",
     1: "I am hanging in water",
@@ -80,7 +81,12 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
         if (_start == 0) {
           setState(() {
             count = 0; // Reset the counter
-            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
+            buttonClicked = {
+              0: false,
+              1: false,
+              2: false,
+              3: false
+            }; // Reset the buttons
             timer.cancel();
             resetTimer(); // Restart the timer
           });
@@ -134,6 +140,7 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    int scoreToDisplay = AppScore().currentScore;
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -153,6 +160,18 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
@@ -430,5 +449,4 @@ class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
       },
     );
   }
-
 }
