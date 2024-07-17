@@ -17,7 +17,6 @@ class PageTwo extends StatefulWidget {
 }
 
 class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
-
   Timer? _timer;
   int _start = 60;
   int count = 0;
@@ -31,6 +30,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
     print("AppScore");
     print(AppScore().currentScore);
   }
+
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
     String data =
@@ -43,10 +43,10 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
   }
 
   Future<void> speakHint(String message) async {
-      await flutterTts.setLanguage("en-US");
-      await flutterTts.setPitch(1.0);
-      await flutterTts.speak(message);
-    }
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
 
   Map<int, String> buttonToHint = {
     0: "I am on golden fish",
@@ -80,7 +80,12 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
         if (_start == 0) {
           setState(() {
             count = 0; // Reset the counter
-            buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
+            buttonClicked = {
+              0: false,
+              1: false,
+              2: false,
+              3: false
+            }; // Reset the buttons
             timer.cancel();
             resetTimer(); // Restart the timer
           });
@@ -98,7 +103,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        AppScore().setStageScore(1, 0);
+        AppScore().setStageScore(2, 0);
       });
     });
 
@@ -134,6 +139,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    int scoreToDisplay = AppScore().currentScore;
 
     return Scaffold(
       body: OrientationBuilder(
@@ -154,6 +160,18 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
@@ -358,7 +376,7 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
               setState(() {
                 count++;
                 buttonClicked[index] = true;
-                AppScore().setStageScore(1, AppScore().getStageScore(1)! + 100);
+                AppScore().setStageScore(2, AppScore().getStageScore(2)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
                   flutterTts.speak(
