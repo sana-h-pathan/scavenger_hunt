@@ -323,11 +323,11 @@ class _ScoreWidgetState extends State<ScoreWidget> {
       right: MediaQuery.of(context).size.width * 0.28,
       child: Row(
         children: [
-          Text(
-            'Score: $currentScore',
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
+          // Text(
+          //   'Score: $currentScore',
+          //   style: TextStyle(
+          //       fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          // ),
         ],
       ),
     );
