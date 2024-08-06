@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:scavanger_hunt/learn-counting.dart';
 import 'package:scavanger_hunt/match-sequence.dart';
 import 'package:scavanger_hunt/number-memory.dart';
 import 'header.dart';
@@ -120,42 +121,67 @@ class HomeScreen extends StatelessWidget {
             bottom: 150, // Adjust top position as needed
             left: 0,
             right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NumberSequenceQuiz()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/sequence.png',
-                            height: 300, // Set the height to adjust the size
-                            width: 300, // Set the width to adjust the size
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CountAndFillPage()),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/CountingNums.png',
+                          height: 300, // Set the height to adjust the size
+                          width: 300, // Set the width to adjust the size
+                        ),
+                        const SizedBox(height: 1),
+                        const Text(
+                          'Counting',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Number Sequence',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NumberSequenceQuiz()),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/sequence.png',
+                          height: 300, // Set the height to adjust the size
+                          width: 300, // Set the width to adjust the size
+                        ),
+                        const SizedBox(height: 1),
+                        const Text(
+                          'Number Sequence',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

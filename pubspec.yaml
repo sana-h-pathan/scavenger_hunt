@@ -97,6 +97,11 @@ flutter:
     - assets/numberlevel.jpg
     - assets/flipcard.png
     - assets/sequence.png
+    - assets/ball.png
+    - assets/colorball.png
+    - assets/basket.png
+    - assets/apple.png
+    - assets/CountingNums.png
     - assets/texts/en-US.json
     - assets/texts/es-ES.json
     - assets/clapping_sound.mp3
