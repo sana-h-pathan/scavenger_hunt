@@ -38,10 +38,10 @@ class _PageThreeState extends State<PageThree>
     String data =
         await rootBundle.loadString('assets/texts/$languageCode.json');
     Map<String, dynamic> texts = json.decode(data);
-    String message = texts[messageKey];
+    //String message = texts[messageKey];
     await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
+    await flutterTts.speak(messageKey);
   }
 
   Future<void> speakHint(String message) async {
@@ -437,7 +437,7 @@ class _PageThreeState extends State<PageThree>
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.push(
-                  // Navigate to PageTwo
+                  // Navigate to PageFour
                   context,
                   MaterialPageRoute(builder: (context) => PageFour()),
                 );
