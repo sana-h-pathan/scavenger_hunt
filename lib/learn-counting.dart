@@ -88,7 +88,6 @@ class _CountAndFillPageState extends State<CountAndFillPage> {
   void _showCongratulationDialog() {
     player.play('clapping_sound.mp3');
     flutterTts.speak('Congratulations!! You are awesome!!');
-    
 
     showDialog(
       context: context,
@@ -181,127 +180,131 @@ class _CountAndFillPageState extends State<CountAndFillPage> {
                 top: MediaQuery.of(context).size.height * 0.10,
                 left: MediaQuery.of(context).size.width * 0.30,
                 child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Learn to Count',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Learn to Count',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10), // Space between title and instructions
-                  Text(
-                    'Drag the balls to the box and count them.\nPress Submit when done.',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.normal,
+                    SizedBox(height: 10), // Space between title and instructions
+                    Text(
+                      'Drag the balls to the box and count them.\nPress Submit when done.',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-              
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.15,
                 child: Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [ Color.fromRGBO(252, 170, 214, 1),Color.fromRGBO(230, 195, 214, 1),],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ElevatedButton(
-                  onPressed: _resetCountAndButtons,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    backgroundColor: Colors.transparent, // Make button background transparent to show gradient
-                    elevation: 0, // Remove default shadow
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(252, 170, 214, 1),
+                        Color.fromRGBO(230, 195, 214, 1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    'Reset',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.black,
+                  child: ElevatedButton(
+                    onPressed: _resetCountAndButtons,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      backgroundColor: Colors.transparent, // Make button background transparent to show gradient
+                      elevation: 0, // Remove default shadow
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Reset',
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-              
-            Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.02,
-              right: MediaQuery.of(context).size.width * 0.45,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.mic,
-                  size: 60,
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02,
+                right: MediaQuery.of(context).size.width * 0.45,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.mic,
+                    size: 60,
+                  ),
+                  color: Colors.white,
+                  onPressed: () async {
+                    flutterTts.speak('Drag the balls to the box and count them.\nPress Submit when done.!!');
+                    // Add functionality here if needed
+                  },
                 ),
-                color: Colors.white,
-                onPressed: () async {
-                  flutterTts.speak('Drag the balls to the box and count them.\nPress Submit when done.!!');
-                  // Add functionality here if needed
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02,
+                right: MediaQuery.of(context).size.width * 0.15,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(252, 170, 214, 1),
+                        Color.fromRGBO(230, 195, 214, 1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: _submitCount,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      backgroundColor: Colors.transparent, // Make button background transparent to show gradient
+                      elevation: 0, // Remove default shadow
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              HomeWidget(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
                 },
               ),
-            ),
-             Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.02,
-              right: MediaQuery.of(context).size.width * 0.15,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [ Color.fromRGBO(252, 170, 214, 1),Color.fromRGBO(230, 195, 214, 1),],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ElevatedButton(
-                  onPressed: _submitCount,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    backgroundColor: Colors.transparent, // Make button background transparent to show gradient
-                    elevation: 0, // Remove default shadow
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+              MenuWidget(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
               ),
-            ),
-            HomeWidget(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
-            ),
-            MenuWidget(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
-            ),
-            const ScoreWidget(),
-            const LanguageWidget(),
+              const ScoreWidget(),
+              const LanguageWidget(),
             ],
           );
         },
@@ -348,8 +351,8 @@ class _CountAndFillPageState extends State<CountAndFillPage> {
       opacity: opacity,
       child: Image.asset(
         'assets/colorball.png',
-        height: 50,
-        width: 50,
+        height: 70,
+        width: 70,
       ),
     );
   }
@@ -372,72 +375,72 @@ class CountAndFillPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          BackgroundGradient(),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.1,
-            left: MediaQuery.of(context).size.width * 0.49,
-            child: Text(
-              '$targetNumber',
-              style: const TextStyle(
-                fontSize: 100,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+    return Stack(
+      children: [
+        BackgroundGradient(),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.1,
+          left: MediaQuery.of(context).size.width * 0.49,
+          child: Text(
+            '$targetNumber',
+            style: const TextStyle(
+              fontSize: 100,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.2,
-            left: MediaQuery.of(context).size.width * 0.1,
-            child: Row(
-              children: List.generate(1, (index) {
-                return Draggable<int>(
-                  data: 1,
-                  feedback: _appleWidget(),
-                  childWhenDragging: _appleWidget(opacity: 0.5),
-                  child: _appleWidget(),
-                );
-              }),
-            ),
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.2,
+          left: MediaQuery.of(context).size.width * 0.1,
+          child: Row(
+            children: List.generate(1, (index) {
+              return Draggable<int>(
+                data: 1,
+                feedback: _appleWidget(),
+                childWhenDragging: _appleWidget(opacity: 0.5),
+                child: _appleWidget(),
+              );
+            }),
           ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.07,
-            right: MediaQuery.of(context).size.width * 0.1,
-            child: DragTarget<int>(
-              builder: (context, candidateData, rejectedData) {
-                return Container(
-                  height: 400,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 5),
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          '$currentCount / $targetNumber',
-                          style: const TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+        ),
+         Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.07,
+          right: MediaQuery.of(context).size.width * 0.1,
+          child: DragTarget<int>(
+            builder: (context, candidateData, rejectedData) {
+              return Column(
+                children: [
+                  Container(
+                    height: 400,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/basket-1.jpg'), // Basket image
+                        fit: BoxFit.contain,
                       ),
-                      ...droppedBalls,
-                    ],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      children: droppedBalls,
+                    ),
                   ),
-                );
-              },
-              onAccept: onAccept,
-            ),
+                  const SizedBox(height: 10), // Space between image and text
+                  Text(
+                    '$currentCount / $targetNumber',
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              );
+            },
+            onAccept: onAccept,
           ),
-          
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -12,6 +12,8 @@ class NumberSequenceQuiz extends StatefulWidget {
 }
 
 class _NumberSequenceQuizState extends State<NumberSequenceQuiz> {
+  final FlutterTts flutterTts = FlutterTts();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +42,21 @@ class _NumberSequenceQuizState extends State<NumberSequenceQuiz> {
                     fontWeight: FontWeight.bold,
                     fontSize: 50,
                   ),
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.02,
+                right: MediaQuery.of(context).size.width * 0.45,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.mic,
+                    size: 60,
+                  ),
+                  color: Colors.white,
+                  onPressed: () async {
+                    flutterTts.speak('Select the number in sequence');
+                    // Add functionality here if needed
+                  },
                 ),
               ),
               HomeWidget(
