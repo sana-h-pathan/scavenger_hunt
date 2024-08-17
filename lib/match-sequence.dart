@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_tts/flutter_tts.dart'; // Import flutter_tts
+import 'package:flutter_tts/flutter_tts.dart';
 import 'background.dart';
 import 'header.dart';
 import 'home.dart';
+import 'package:scavanger_hunt/app_language.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+
 
 class NumberSequenceQuiz extends StatefulWidget {
   @override
@@ -77,16 +81,14 @@ class NumberSequenceQuizScreen extends StatefulWidget {
 class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
   List<int> numbers = List.generate(10, (index) => index + 1)..shuffle();
   int currentIndex = 0;
-  bool completed = false; // Track if the sequence is completed
+  bool completed = false;
 
-  // Initialize AudioCache
   final player = AudioCache();
-
-  // Initialize FlutterTts
   final FlutterTts flutterTts = FlutterTts();
 
   Timer? timer;
   int timeLeft = 30;
+  int score = 0;
   bool isBlinking = false;
 
   @override
@@ -100,10 +102,8 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
       setState(() {
         timeLeft--;
         if (timeLeft == 0) {
-          // Restart the game if time runs out
           restartGame();
         } else if (timeLeft <= 5) {
-          // Start blinking when time is less than or equal to 5 seconds
           isBlinking = !isBlinking;
         }
       });
@@ -114,83 +114,134 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
     setState(() {
       currentIndex = 0;
       completed = false;
-      timeLeft = 30; // Reset the timer
-      isBlinking = false; // Stop blinking
-      numbers = List.generate(10, (index) => index + 1)..shuffle(); // Shuffle numbers
+      timeLeft = 30;
+      isBlinking = false;
+      score = 0;
+      numbers = List.generate(10, (index) => index + 1)..shuffle();
     });
   }
+
+   Future<void> speakMessage(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+    await flutterTts.setLanguage(languageCode);
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(messageKey);
+  }
+
 
   @override
   void dispose() {
     timer?.cancel();
+    flutterTts.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Define a list of text representations of numbers
     List<String> numberTexts = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Tap the numbers in sequence',
-            style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 60.0),
-          Column(
+    return Stack(
+      children: [
+        Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
+              const Text(
+                'Tap the numbers in sequence',
+                style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 60.0),
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
-                  for (int i = 0; i < 4; i++) _buildNumberContainer(i, numberTexts),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < 4; i++) _buildNumberContainer(i, numberTexts),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 4; i < 8; i++) _buildNumberContainer(i, numberTexts),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 8; i < numbers.length; i++) _buildNumberContainer(i, numberTexts),
+                    ],
+                  ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                  for (int i = 4; i < 8; i++) _buildNumberContainer(i, numberTexts),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (int i = 8; i < numbers.length; i++) _buildNumberContainer(i, numberTexts),
-                ],
-              ),
+              const SizedBox(height: 40),
             ],
           ),
-          const SizedBox(height: 40),
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            width: 120.0, // Adjust width here
-            height: 120.0, // Adjust height here
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0), // Adjust border radius if needed
-            ),
-            child: Center(
-              child: Text(
-                '$timeLeft sec',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: timeLeft <= 5 && isBlinking ? Colors.red : Colors.black, // Blinking color
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical:0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Score: $score',
+                  style: const TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  color: Colors.yellow,
+                  iconSize: 60.0,
+                  onPressed: () {
+                    restartGame();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.mic),
+                  color: Colors.yellow,
+                  iconSize: 60.0,
+                  onPressed: () {
+                    speakMessage('Please tap the numbers in sequence.');
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.lightbulb_outline),
+                  color: Colors.yellow,
+                  iconSize: 60.0,
+                  onPressed: () {
+                    _showHint();
+                  },
+                ),
+                Text(
+                  '$timeLeft sec',
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                    color: timeLeft <= 5 && isBlinking ? Colors.red : Colors.yellow,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
+  void _showHint() {
+    speakMessage('Tap the smallest number available.');
+  }
+
   Widget _buildNumberContainer(int index, List<String> numberTexts) {
-    bool showText = index.isEven; // Alternate between showing text and digit
+    bool showText = index.isEven;
 
     return GestureDetector(
       onTap: () {
@@ -198,6 +249,8 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           if (numbers[index] == currentIndex + 1) {
             setState(() {
               currentIndex++;
+              score += 10;
+              speakMessage(numberTexts[numbers[index] - 1]);
               if (currentIndex == numbers.length) {
                 completed = true;
                 _showCongratulationDialog();
@@ -209,10 +262,10 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
         }
       },
       child: Container(
-        width: 150.0,
-        height: 150.0,
+        width: 160.0,
+        height: 160.0,
         alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
         decoration: BoxDecoration(
           color: numbers[index] <= currentIndex ? Colors.green : Colors.red,
           borderRadius: BorderRadius.circular(30.0),
@@ -222,13 +275,21 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           children: [
             if (showText)
               Text(
-                '${numberTexts[numbers[index] - 1]}', // Show text representation
-                style: const TextStyle(fontSize: 30.0, color: Colors.black),
+                '${numberTexts[numbers[index] - 1]}',
+                style: const TextStyle(
+                  fontSize: 36.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               )
             else
               Text(
-                '${numbers[index]}', // Show digit representation
-                style: const TextStyle(fontSize: 40.0, color: Colors.black),
+                '${numbers[index]}',
+                style: const TextStyle(
+                  fontSize: 50.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
           ],
         ),
@@ -237,7 +298,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
   }
 
   void _showErrorDialog() {
-    flutterTts.speak('Oh, you selected the wrong number. Please try again.');
+    speakMessage('Oh, you selected the wrong number. Please try again.');
 
     showDialog(
       context: context,
@@ -248,6 +309,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           style: TextStyle(
             color: Colors.red,
             fontSize: 30.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         content: const Text(
@@ -255,6 +317,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           style: TextStyle(
             color: Colors.white,
             fontSize: 24.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -263,10 +326,10 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
               setState(() {
                 currentIndex = 0;
                 completed = false;
-                timeLeft = 30; // Reset the timer
-                isBlinking = false; // Stop blinking
+                timeLeft = 30;
+                isBlinking = false;
               });
-              restartGame(); // Shuffle numbers
+              restartGame();
               Navigator.pop(context);
             },
             child: const Text(
@@ -274,6 +337,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -284,7 +348,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
 
   void _showCongratulationDialog() {
     player.play('clapping_sound.mp3');
-    flutterTts.speak('Congratulations!! You are awesome!!');
+    speakMessage('Congratulations!! You are awesome!!');
 
     showDialog(
       context: context,
@@ -295,6 +359,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           style: TextStyle(
             color: Colors.green,
             fontSize: 30.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         content: const Text(
@@ -302,6 +367,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
           style: TextStyle(
             color: Colors.white,
             fontSize: 24.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -315,12 +381,13 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           TextButton(
             onPressed: () {
-              restartGame(); // Shuffle numbers
+              restartGame();
               Navigator.pop(context);
             },
             child: const Text(
@@ -328,6 +395,7 @@ class _NumberSequenceQuizScreenState extends State<NumberSequenceQuizScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

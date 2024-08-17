@@ -35,10 +35,10 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
     String data =
         await rootBundle.loadString('assets/texts/$languageCode.json');
     Map<String, dynamic> texts = json.decode(data);
-    String message = texts[messageKey];
+    //String message = texts[messageKey];
     await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
+    await flutterTts.speak(messageKey);
   }
   Future<void> speakHint(String message) async {
       await flutterTts.setLanguage("en-US");
