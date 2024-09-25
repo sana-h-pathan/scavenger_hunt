@@ -51,10 +51,10 @@ class _PageThreeState extends State<PageThree>
   }
 
   Map<int, String> buttonToHint = {
-    0: "Reach me through ladder",
-    1: "I am hanging in water",
-    2: "I am on arms",
-    3: "Below the stone"
+    0: "I'm on Gold fish",
+    1: "I'm in the water on a fish",
+    2: "Find me below the stone",
+    3: "Fine me on the same stone"
   };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 

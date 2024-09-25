@@ -22,18 +22,14 @@ class _PageEightState extends State<PageEight> with SingleTickerProviderStateMix
 
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakHint(String message) async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
-  }
-
-
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   bool _isAnimationVisible = true;
+
   Future<void> stage_finished() async {
     speakMessage("You have found all occurrences of number 8");
+    print("AppScore");
+    print(AppScore().currentScore);
   }
 
   Future<void> speakMessage(String messageKey) async {
@@ -46,6 +42,15 @@ class _PageEightState extends State<PageEight> with SingleTickerProviderStateMix
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
   }
+
+
+  
+  Future<void> speakHint(String message) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(message);
+  }
+
 
   Map<int, String> buttonToHint = {
     0: "I am on yellow slide",
@@ -61,6 +66,7 @@ class _PageEightState extends State<PageEight> with SingleTickerProviderStateMix
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
       resetTimer();
       AppScore().setStageScore(8, 0);
+      AppScore().resetStageScore();
     });
   }
 
@@ -133,7 +139,7 @@ class _PageEightState extends State<PageEight> with SingleTickerProviderStateMix
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-
+    int scoreToDisplay = AppScore().currentScore;
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -153,6 +159,18 @@ class _PageEightState extends State<PageEight> with SingleTickerProviderStateMix
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                 ],
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,

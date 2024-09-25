@@ -51,20 +51,20 @@ class _PageSixState extends State<PageSix> with SingleTickerProviderStateMixin{
     }
 
   Map<int, String> buttonToHint = {
-    0: "one",
-    1: "two",
-    2: "three",
-    3: "four"
-    /*,*4: "five",
-    5: "six"*/
+    0: "I'm on the hammer",
+    1: "Find me on the head",
+    2: "I'm here on the hand",
+    3: "Find me above the hulk hair",
+    4: "Fine me near green hulk",
+    5: "Find me on the chest"
   };
   Map<int, bool> buttonClicked = {
     0: false,
     1: false,
     2: false,
-    3: false
-    /*,*4: false,
-    5: false*/
+    3: false,
+    4: false,
+    5: false
   };
 
   void resetCountAndButtons() {
@@ -74,9 +74,9 @@ class _PageSixState extends State<PageSix> with SingleTickerProviderStateMixin{
         0: false,
         1: false,
         2: false,
-        3: false/*,
+        3: false,
         4: false,
-        5: false*/
+        5: false
       };
       resetTimer();
       AppScore().setStageScore(6, 0);
@@ -219,7 +219,7 @@ class _PageSixState extends State<PageSix> with SingleTickerProviderStateMixin{
                 bottom: MediaQuery.of(context).size.height * 0.01,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Text(
-                  '$count/4',
+                  '$count/6',
                   style: const TextStyle(
                     color: Colors.yellow,
                     fontWeight: FontWeight.bold,
@@ -310,7 +310,7 @@ class _PageSixState extends State<PageSix> with SingleTickerProviderStateMixin{
                 right: MediaQuery.of(context).size.width * 0.21,
                 child: buildButton(3),
               ),
-              /*Positioned(
+              Positioned(
                 bottom:
                     MediaQuery.of(context).size.height * 0.45, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.75,
@@ -321,7 +321,7 @@ class _PageSixState extends State<PageSix> with SingleTickerProviderStateMixin{
                     MediaQuery.of(context).size.height * 0.80, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.92,
                 child: buildButton(5),
-              ),*/
+              ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,

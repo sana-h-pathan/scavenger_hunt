@@ -49,11 +49,11 @@ class _PageFiveState extends State<PageFive> with SingleTickerProviderStateMixin
     }
 
   Map<int, String> buttonToHint = {
-    0: "one",
-    1: "two",
-    2: "three",
-    3: "four",
-    4: "five"
+    0: "Find me below  super man",
+    1: "Fine me on the chest of the flash",
+    2: "Find me on the belt",
+    3: "I'm at the back",
+    4: "I'm on the batman"
   };
   Map<int, bool> buttonClicked = {
     0: false,
@@ -205,7 +205,7 @@ class _PageFiveState extends State<PageFive> with SingleTickerProviderStateMixin
                 bottom: MediaQuery.of(context).size.height * 0.01,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Text(
-                  '$count/4',
+                  '$count/5',
                   style: const TextStyle(
                     color: Colors.yellow,
                     fontWeight: FontWeight.bold,
@@ -297,12 +297,12 @@ class _PageFiveState extends State<PageFive> with SingleTickerProviderStateMixin
                 right: MediaQuery.of(context).size.width * 0.11,
                 child: buildButton(3),
               ),
-              /*Positioned(
+              Positioned(
                 bottom:
                     MediaQuery.of(context).size.height * 0.67, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.80,
                 child: buildButton(4),
-              ),*/
+              ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,
