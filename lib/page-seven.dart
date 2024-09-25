@@ -43,28 +43,32 @@ class _PageSevenState extends State<PageSeven>with SingleTickerProviderStateMixi
     await flutterTts.speak(messageKey);
   }
 
-  Future<void> speakHint(String message) async {
-      await flutterTts.setLanguage("en-US");
+  Future<void> speakHint(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+      await flutterTts.setLanguage(languageCode);
       await flutterTts.setPitch(1.0);
-      await flutterTts.speak(message);
+      await flutterTts.speak(messageKey);
     }
   Map<int, String> buttonToHint = {
-    0: "one",
-    1: "two",
-    2: "three",
-    3: "four"/*,
-    4: "five",
-    5: "six",
-    6: "seven"*/
+    0: "I'm on the water",
+    1: "I'm on boy's shirt",
+    2: "Go find me on orange tube",
+    3: "I'm below the tubes",
+    4: "I'm on blue tube",
+    5: "Find me on purple color",
+    6: "Find me at the back of kids"
   };
   Map<int, bool> buttonClicked = {
     0: false,
     1: false,
     2: false,
-    3: false/*,
+    3: false,
     4: false,
     5: false,
-    6: false*/
+    6: false
   };
 
   void resetCountAndButtons() {
@@ -74,10 +78,10 @@ class _PageSevenState extends State<PageSeven>with SingleTickerProviderStateMixi
         0: false,
         1: false,
         2: false,
-        3: false/*,
+        3: false,
         4: false,
         5: false,
-        6: false*/
+        6: false
       };
       resetTimer();
       AppScore().setStageScore(7, 0);
@@ -221,7 +225,7 @@ class _PageSevenState extends State<PageSeven>with SingleTickerProviderStateMixi
                 bottom: MediaQuery.of(context).size.height * 0.01,
                 left: MediaQuery.of(context).size.width * 0.40,
                 child: Text(
-                  '$count/4',
+                  '$count/7',
                   style: const TextStyle(
                     color: Colors.yellow,
                     fontWeight: FontWeight.bold,
@@ -312,7 +316,7 @@ class _PageSevenState extends State<PageSeven>with SingleTickerProviderStateMixi
                 right: MediaQuery.of(context).size.width * 0.33,
                 child: buildButton(3),
               ),
-              /*Positioned(
+              Positioned(
                 bottom:
                     MediaQuery.of(context).size.height * 0.62, // 5% from bottom
                 right: MediaQuery.of(context).size.width * 0.88,
@@ -330,7 +334,7 @@ class _PageSevenState extends State<PageSeven>with SingleTickerProviderStateMixi
                 right: MediaQuery.of(context).size.width * 0.39,
                 child: buildButton(6),
               ),
-              */
+              
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.40,

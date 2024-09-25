@@ -23,22 +23,24 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   bool _isAnimationVisible = true;
+  FlutterTts flutterTts = FlutterTts();
+
 
   Future<void> stage_finished() async {
     speakMessage("You have found all occurrences of number 3");
     print("AppScore");
     print(AppScore().currentScore);
   }
-  FlutterTts flutterTts = FlutterTts();
+  
   Future<void> speakMessage(String messageKey) async {
     String languageCode = AppLanguage().currentLanguage;
     String data =
         await rootBundle.loadString('assets/texts/$languageCode.json');
     Map<String, dynamic> texts = json.decode(data);
-    String message = texts[messageKey];
+    //String message = texts[messageKey];
     await flutterTts.setLanguage(languageCode);
     await flutterTts.setPitch(1.0);
-    await flutterTts.speak(message);
+    await flutterTts.speak(messageKey);
   }
   Future<void> speakHint(String message) async {
       await flutterTts.setLanguage("en-US");
@@ -47,10 +49,10 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
     }
 
   Map<int, String> buttonToHint = {
-    0: "one",
-    1: "two",
-    2: "three",
-    3: "find me in water"
+    0: "Fine me on the chest of hulk",
+    1: "Fine me on the iron man",
+    2: "Go checkout on spider man",
+    3: "Find me on the captian america"
   };
   Map<int, bool> buttonClicked = {0: false, 1: false, 2: false, 3: false};
 
@@ -79,9 +81,10 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
           setState(() {
             count = 0; // Reset the counter
             buttonClicked = {0: false, 1: false, 2: false, 3: false}; // Reset the buttons
-            timer.cancel();
-            resetTimer(); // Restart the timer
+             // Restart the timer
           });
+          timer.cancel();
+            resetTimer();
         } else {
           setState(() {
             _start--;
@@ -130,6 +133,7 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    int scoreToDisplay = AppScore().currentScore;
 
     return Scaffold(
       body: OrientationBuilder(
@@ -154,6 +158,18 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
                       height: MediaQuery.of(context).size.height *
                           0.11), // 10% bottom padding
                 ],
+              ),
+               Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
@@ -294,7 +310,7 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
                 },
               ),
               ScoreWidget(),
-              const LanguageWidget(),
+              LanguageWidget(),
               // Animation Overlay
               if (_isAnimationVisible)
                 Positioned.fill(
@@ -364,8 +380,10 @@ class _PageFourState extends State<PageFour> with SingleTickerProviderStateMixin
                 AppScore().setStageScore(4, AppScore().getStageScore(4)! + 100);
                 if (count == 4) {
                   _showStarsDialog();
-                  speakMessage(
+                  flutterTts.speak(
                       "Congratulations!!!You have found all occurrences of number 4");
+                  print("AppScore");
+                  print(AppScore().currentScore);
                 }
               });
             }

@@ -15,13 +15,34 @@ class PageTen extends StatefulWidget {
   _PageTenState createState() => _PageTenState();
 }
 
-class _PageTenState extends State<PageTen> {
+class _PageTenState extends State<PageTen> with SingleTickerProviderStateMixin {
   Timer? _timer;
   int _start = 60;
 
   int count = 0;
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speakMessage(String message) async {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  bool _isAnimationVisible = true;
+
+  Future<void> stage_finished() async {
+    speakMessage("You have found all occurrences of number 1");
+    print("AppScore");
+    print(AppScore().currentScore);
+  }
+
+  Future<void> speakMessage(String messageKey) async {
+    String languageCode = AppLanguage().currentLanguage;
+    String data =
+        await rootBundle.loadString('assets/texts/$languageCode.json');
+    Map<String, dynamic> texts = json.decode(data);
+    //String message = texts[messageKey];
+    await flutterTts.setLanguage(languageCode);
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(messageKey);
+  }
+
+  Future<void> speakHint(String message) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(message);
@@ -40,7 +61,8 @@ class _PageTenState extends State<PageTen> {
       count = 0;
       buttonClicked = {0: false, 1: false, 2: false, 3: false};
       resetTimer();
-      AppScore().setStageScore(10, 0);
+      AppScore().resetStageScore();
+      AppScore().resetStageScore();
     });
   }
 
@@ -57,8 +79,15 @@ class _PageTenState extends State<PageTen> {
       (Timer timer) {
         if (_start == 0) {
           setState(() {
-            print("Timer Completed"); // Debug when timer reaches 0
+            count = 0; // Reset the counter
+            buttonClicked = {
+              0: false,
+              1: false,
+              2: false,
+              3: false
+            }; // Reset the buttons
             timer.cancel();
+            resetTimer(); // Restart the timer
           });
         } else {
           setState(() {
@@ -78,11 +107,30 @@ class _PageTenState extends State<PageTen> {
         AppScore().setStageScore(10, 0);
       });
     });
+
+  // Initialize the animation controller and animation
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, -1.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation and play the sound
+    _controller.forward().then((_) {
+      speakMessage("page_Ten_message");
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -92,7 +140,7 @@ class _PageTenState extends State<PageTen> {
     int seconds = _start % 60;
     String formattedTime =
         '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-
+    int scoreToDisplay = AppScore().currentScore;
     return Scaffold(
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -114,9 +162,23 @@ class _PageTenState extends State<PageTen> {
                 ],
               ),
               Positioned(
+                bottom: MediaQuery.of(context).size.height * 0.028,
+                left: MediaQuery.of(context).size.width * 0.005,
+                child: Text(
+                  'Score : $scoreToDisplay',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.02,
                 left: MediaQuery.of(context).size.width * 0.25,
-                child: IconButton(
+                child: Tooltip(
+                  message: 'Reset', // Tooltip message
+                  child: IconButton(
                   icon: const Icon(
                     Icons.refresh,
                     size: 60,
@@ -125,6 +187,7 @@ class _PageTenState extends State<PageTen> {
                   onPressed: resetCountAndButtons,
                 ),
               ),
+            ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.055,
                 left: MediaQuery.of(context).size.width * 0.40,
@@ -178,13 +241,12 @@ class _PageTenState extends State<PageTen> {
                   color: Colors.yellow,
                   onPressed: () async {
                     if (allButtonsClicked()) {
-                      speakMessage(
-                          "You have found all occurrences of number 10");
+                      stage_finished();
                     }
                     // Speak the hint if the button hasn't been clicked
                     for (int i = 0; i < buttonToHint.length; i++) {
                       if (!buttonClicked[i]!) {
-                        await speakMessage(buttonToHint[i]!);
+                        await speakHint(buttonToHint[i]!);
                         break;
                       }
                     }
@@ -254,7 +316,40 @@ class _PageTenState extends State<PageTen> {
                 },
               ),
               ScoreWidget(),
-              LanguageWidget()
+              LanguageWidget(),
+            if (_isAnimationVisible)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipOval(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: MediaQuery.of(context).size.width * 0.5,
+                            child: SlideTransition(
+                              position: _offsetAnimation,
+                              child: Image.asset(
+                                'assets/ten.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _isAnimationVisible = false;
+                            });
+                            startTimer(); // Start the timer when OK is pressed
+                          },
+                          child: Text("OK"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           );
         },
@@ -293,6 +388,8 @@ class _PageTenState extends State<PageTen> {
                   _showStarsDialog();
                   flutterTts.speak(
                       "Congratulations!! You have found all occurrences of number 10");
+                   print("AppScore");
+                  print(AppScore().currentScore);
                 }
               });
             }
@@ -308,11 +405,23 @@ class _PageTenState extends State<PageTen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.blueGrey, // Change background color
-          title: const Text(
+          title: Column(
+            children: [
+              const Text(
             'Congratulations!',
             style: TextStyle(
                 color: Colors.yellow,
                 fontSize: 30), // Change text color and size
+          ),
+        
+           Text(
+                'Your Score: ${AppScore().currentScore}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ],
           ),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
