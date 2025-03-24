@@ -205,11 +205,12 @@ class HomeWidget extends StatelessWidget {
         ),
         iconSize: 36,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          ); // Handle home button press here
-        },
+
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );// Handle home button press here
+            },
       ),
     );
   }
